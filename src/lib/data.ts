@@ -5,6 +5,8 @@ export type Question = {
   options: { id: string; text: string; text_hi: string }[];
   correctAnswer: string;
   difficulty: 'easy' | 'medium' | 'hard';
+  hints: string[];
+  hints_hi: string[];
 };
 
 export type Mission = {
@@ -42,6 +44,16 @@ export const missions: Mission[] = [
         ],
         correctAnswer: 'b',
         difficulty: 'easy',
+        hints: [
+            "It's named after a famous scientist.",
+            "Think about the laws of motion.",
+            "The symbol for this unit is 'N'."
+        ],
+        hints_hi: [
+            "इसका नाम एक प्रसिद्ध वैज्ञानिक के नाम पर रखा गया है।",
+            "गति के नियमों के बारे में सोचें।",
+            "इस इकाई का प्रतीक 'N' है।"
+        ]
       },
       {
         id: 2,
@@ -55,6 +67,16 @@ export const missions: Mission[] = [
         ],
         correctAnswer: 'a',
         difficulty: 'medium',
+        hints: [
+            "Inertia is the resistance to change in motion.",
+            "This law states that an object at rest stays at rest unless acted upon by a force.",
+            "It's the very first one he came up with."
+        ],
+        hints_hi: [
+            "जड़त्व गति में परिवर्तन का प्रतिरोध है।",
+            "यह नियम कहता है कि कोई वस्तु तब तक स्थिर रहती है जब तक उस पर कोई बल न लगाया जाए।",
+            "यह सबसे पहला नियम है जो उन्होंने दिया था।"
+        ]
       },
       {
         id: 3,
@@ -68,6 +90,16 @@ export const missions: Mission[] = [
         ],
         correctAnswer: 'c',
         difficulty: 'medium',
+        hints: [
+            "For every action, there is an equal and opposite reaction.",
+            "Think about action-reaction pairs.",
+            "This law explains how rockets work."
+        ],
+        hints_hi: [
+            "हर क्रिया की बराबर और विपरीत प्रतिक्रिया होती है।",
+            "क्रिया-प्रतिक्रिया जोड़ी के बारे में सोचें।",
+            "यह नियम बताता है कि रॉकेट कैसे काम करते हैं।"
+        ]
       },
        {
         id: 4,
@@ -81,6 +113,16 @@ export const missions: Mission[] = [
         ],
         correctAnswer: 'a',
         difficulty: 'hard',
+        hints: [
+            "Remember the formula: Force = mass × acceleration.",
+            "Multiply the mass of the object by its acceleration.",
+            "10 multiplied by 5 gives you the answer."
+        ],
+        hints_hi: [
+            "सूत्र याद रखें: बल = द्रव्यमान × त्वरण।",
+            "वस्तु के द्रव्यमान को उसके त्वरण से गुणा करें।",
+            "10 को 5 से गुणा करने पर आपको उत्तर मिल जाएगा।"
+        ]
       },
     ],
   },
@@ -106,6 +148,16 @@ export const missions: Mission[] = [
         ],
         correctAnswer: 'c',
         difficulty: 'easy',
+        hints: [
+            "It involves sunlight, water, and carbon dioxide.",
+            "The word 'photo' means light.",
+            "This process releases oxygen into the air."
+        ],
+        hints_hi: [
+            "इसमें सूर्य का प्रकाश, पानी और कार्बन डाइऑक्साइड शामिल हैं।",
+            "'फोटो' शब्द का अर्थ प्रकाश है।",
+            "यह प्रक्रिया हवा में ऑक्सीजन छोड़ती है।"
+        ]
       },
       {
         id: 2,
@@ -119,6 +171,16 @@ export const missions: Mission[] = [
         ],
         correctAnswer: 'b',
         difficulty: 'medium',
+        hints: [
+            "It's the gas that humans and animals breathe out.",
+            "Its chemical formula is CO2.",
+            "Too much of this gas contributes to the greenhouse effect."
+        ],
+        hints_hi: [
+            "यह वह गैस है जिसे मनुष्य और जानवर बाहर निकालते हैं।",
+            "इसका रासायनिक सूत्र CO2 है।",
+            "इस गैस की अधिकता ग्रीनहाउस प्रभाव में योगदान करती है।"
+        ]
       }
     ],
   },

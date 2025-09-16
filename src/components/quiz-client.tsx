@@ -4,7 +4,6 @@ import type { Mission, Question } from "@/lib/data";
 import { useState, useEffect, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/language-context";
-import { getHintAction } from "@/app/actions/get-hint";
 import {
   Card,
   CardContent,
@@ -83,22 +82,18 @@ export function QuizClient({ mission }: { mission: Mission }) {
     }
   };
 
-  const handleGetHint = async () => {
-    setIsHintLoading(true);
-    const studentPerformance = `The student has attempted this question ${incorrectAttempts} times and has not found the correct answer yet. Current hint level requested is ${hintLevel}.`;
-    const res = await getHintAction({
-      question: t("text", currentQuestion),
-      studentPerformance,
-      hintLevel,
-    });
-    
-    if (res.error) {
-      toast({ title: "Error", description: res.error, variant: "destructive" });
-    } else {
-      setHint(res.hint);
+  const handleGetHint = () => {
+    const hints = language === 'hi' ? currentQuestion.hints_hi : currentQuestion.hints;
+    if (hintLevel <= hints.length) {
+      setHint(hints[hintLevel - 1]);
       setHintLevel(prev => prev + 1);
+    } else {
+      setHint(hints[hints.length - 1]);
+      toast({
+        title: "No more hints!",
+        description: "You've seen all the available hints for this question.",
+      });
     }
-    setIsHintLoading(false);
   };
   
   const handleSubmit = () => {
