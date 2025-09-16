@@ -1,5 +1,6 @@
+"use client";
 
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import { experiments } from "@/lib/data";
 import {
@@ -11,22 +12,33 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/language-context";
 
-export default function ExperimentPage({ params }: { params: { id: string } }) {
+export default function ExperimentPage() {
+  const params = useParams();
+  const { t } = useLanguage();
   const experiment = experiments.find((exp) => exp.id === params.id);
 
   if (!experiment) {
     notFound();
   }
 
+  const pageText = {
+      step: {
+          en: "Step",
+          hi: "चरण",
+          te: "దశ",
+      }
+  }
+
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold font-headline tracking-tight text-center">
-          {experiment.title}
+          {t('title', experiment)}
         </h1>
         <p className="text-muted-foreground text-center mt-2">
-          {experiment.description}
+          {t('description', experiment)}
         </p>
       </div>
       
@@ -38,14 +50,14 @@ export default function ExperimentPage({ params }: { params: { id: string } }) {
                 <Card className="overflow-hidden">
                   <CardContent className="flex flex-col md:flex-row items-center justify-center p-0">
                     <div className="md:w-1/2 p-6 flex flex-col justify-center items-start">
-                      <Badge variant="secondary" className="mb-2">Step {index + 1}</Badge>
-                      <h2 className="text-2xl font-bold font-headline">{step.title}</h2>
-                      <p className="mt-2 text-muted-foreground">{step.description}</p>
+                      <Badge variant="secondary" className="mb-2">{t('step', pageText)} {index + 1}</Badge>
+                      <h2 className="text-2xl font-bold font-headline">{t('title', step)}</h2>
+                      <p className="mt-2 text-muted-foreground">{t('description', step)}</p>
                     </div>
                     <div className="md:w-1/2">
                       <Image
                         src={step.imageUrl}
-                        alt={step.title}
+                        alt={t('title', step)}
                         width={600}
                         height={400}
                         className="w-full h-full object-cover"
@@ -64,5 +76,3 @@ export default function ExperimentPage({ params }: { params: { id: string } }) {
     </div>
   );
 }
-
-    

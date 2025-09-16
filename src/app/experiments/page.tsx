@@ -1,3 +1,4 @@
+"use client";
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,16 +13,37 @@ import {
 import { Button } from '@/components/ui/button';
 import { experiments } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function ExperimentsPage() {
+    const { t } = useLanguage();
+
+    const pageText = {
+        title: {
+            en: "Hands-on STEM Experiments",
+            hi: "हैंड्स-ऑन STEM प्रयोग",
+            te: "చేతితో చేసే STEM ప్రయోగాలు",
+        },
+        description: {
+            en: "Learn by doing with these fun and low-cost experiments!",
+            hi: "इन मजेदार और कम लागत वाले प्रयोगों के साथ करके सीखें!",
+            te: "ఈ సరదా మరియు తక్కువ-ధర ప్రయోగాలతో చేయడం ద్వారా నేర్చుకోండి!",
+        },
+        startExperiment: {
+            en: "Start Experiment",
+            hi: "प्रयोग शुरू करें",
+            te: "ప్రయోగం ప్రారంభించండి",
+        }
+    }
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-headline tracking-tight">
-          Hands-on STEM Experiments
+          {t('title', pageText)}
         </h1>
         <p className="text-muted-foreground">
-          Learn by doing with these fun and low-cost experiments!
+          {t('description', pageText)}
         </p>
       </div>
 
@@ -31,7 +53,7 @@ export default function ExperimentsPage() {
             <CardHeader className="p-0">
                 <Image 
                     src={exp.imageUrl}
-                    alt={exp.title}
+                    alt={t('title', exp)}
                     width={600}
                     height={400}
                     className="w-full h-48 object-cover"
@@ -39,13 +61,13 @@ export default function ExperimentsPage() {
                 />
             </CardHeader>
             <div className="p-6 flex flex-col flex-grow">
-              <CardTitle className="font-headline">{exp.title}</CardTitle>
-              <CardDescription>{exp.description}</CardDescription>
+              <CardTitle className="font-headline">{t('title', exp)}</CardTitle>
+              <CardDescription>{t('description', exp)}</CardDescription>
               <div className="flex-grow" />
               <CardFooter className="p-0 pt-6">
                 <Button asChild className="w-full">
                   <Link href={`/experiments/${exp.id}`}>
-                    Start Experiment <ArrowRight className="ml-2 h-4 w-4" />
+                    {t('startExperiment', pageText)} <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </CardFooter>
@@ -56,5 +78,3 @@ export default function ExperimentsPage() {
     </div>
   );
 }
-
-    
