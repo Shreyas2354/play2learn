@@ -11,8 +11,9 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Lock } from 'lucide-react';
 import { missions, subjects } from '@/lib/data';
+import { cn } from '@/lib/utils';
 
 export default function SubjectPage({ params }: { params: { id: string } }) {
   const subject = subjects.find((s) => s.id === params.id);
@@ -21,6 +22,9 @@ export default function SubjectPage({ params }: { params: { id: string } }) {
   if (!subject) {
     notFound();
   }
+
+  // In a real app, this would come from user progress state
+  const completedLevels = 1; 
 
   return (
     <div className="space-y-8">
@@ -35,36 +39,51 @@ export default function SubjectPage({ params }: { params: { id: string } }) {
 
       {subjectMissions.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {subjectMissions.map((mission) => (
-            <Card key={mission.id} className="flex flex-col shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <Badge
-                    variant="default"
-                    className={`w-12 h-12 flex items-center justify-center rounded-lg text-2xl ${mission.badge_color}`}
-                  >
-                    {mission.badge_emoji}
-                  </Badge>
-                  <div>
-                    <CardTitle className="font-headline">{mission.title}</CardTitle>
-                    <CardDescription>{mission.description}</CardDescription>
+          {subjectMissions.map((mission, index) => {
+            const level = index + 1;
+            const isLocked = level > completedLevels;
+
+            return (
+              <Card 
+                key={mission.id} 
+                className={cn(
+                  "flex flex-col shadow-lg transition-shadow duration-300",
+                  isLocked ? "bg-muted/50" : "hover:shadow-xl"
+                )}
+              >
+                <CardHeader>
+                  <div className="flex items-center gap-4">
+                    <Badge
+                      variant="default"
+                      className={cn(
+                        `w-12 h-12 flex items-center justify-center rounded-lg text-2xl`,
+                        isLocked ? "bg-gray-400" : mission.badge_color
+                      )}
+                    >
+                      {isLocked ? <Lock /> : mission.badge_emoji}
+                    </Badge>
+                    <div>
+                      <CardTitle className="font-headline">{mission.title}</CardTitle>
+                      <CardDescription>{mission.description}</CardDescription>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground">
-                  {mission.questions.length} questions
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Button asChild className="w-full">
-                  <Link href={`/missions/${mission.id}`}>
-                    Start Level <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-sm text-muted-foreground">
+                    {mission.questions.length} questions
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button asChild className="w-full" disabled={isLocked}>
+                    <Link href={`/missions/${mission.id}`}>
+                      {isLocked ? 'Locked' : 'Start Level'}
+                      {!isLocked && <ArrowRight className="ml-2 h-4 w-4" />}
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
       ) : (
         <Card className="text-center p-8">
