@@ -142,7 +142,7 @@ export const missions: Mission[] = [
         text_mr: 'जर तुम्ही भिंतीला ढकलले, तर भिंत तुम्हाला समान आणि विरुद्ध बलाने मागे ढकलते. हे कशाचे उदाहरण आहे:',
         options: [
             { id: 'a', text: "Newton's First Law", text_hi: 'न्यूटन का पहला नियम', text_te: 'న్యూటన్ మొదటి నియమం', text_ta: 'நியூட்டனின் முதல் விதி', text_mr: 'न्यूटनचा पहिला नियम' },
-            { id: 'b', text: "Newton's Second Law", text_hi: 'न्यूटन का दूसरा नियम', text_te: 'న్యూటన్ రెండవ నియమం', text_ta: 'நியூட்டனின் இரண்டாம் விதி', text_mr: 'न्यूटनचा दुसरा नियम' },
+            { id: 'b', text: "Newton's Second Law", text_hi: 'न्यूटन का दूसरा नियम', text_te: 'న్యూటన్ రెండవ నియమం', text_ta: 'நியூட்டனின் இரண்டாம் விதி', text_mr: 'న్యూटनचा दुसरा नियम' },
             { id: 'c', text: "Newton's Third Law", text_hi: 'न्यूटन का तीसरा नियम', text_te: 'న్యూటన్ మూడవ నియమం', text_ta: 'நியூட்டனின் மூன்றாம் விதி', text_mr: 'న్యూटनचा तिसरा नियम' },
             { id: 'd', text: "Friction", text_hi: 'घर्षण', text_te: 'ఘర్షణ', text_ta: 'உராய்வு', text_mr: 'घर्षण' },
         ],
