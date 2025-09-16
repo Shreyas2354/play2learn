@@ -1,3 +1,4 @@
+
 export type Question = {
   id: number;
   text: string;
@@ -142,7 +143,7 @@ export const missions: Mission[] = [
         options: [
             { id: 'a', text: "Newton's First Law", text_hi: 'न्यूटन का पहला नियम', text_te: 'న్యూటన్ మొదటి నియమం', text_ta: 'நியூட்டனின் முதல் விதி', text_mr: 'न्यूटनचा पहिला नियम' },
             { id: 'b', text: "Newton's Second Law", text_hi: 'न्यूटन का दूसरा नियम', text_te: 'న్యూటన్ రెండవ నియమం', text_ta: 'நியூட்டனின் இரண்டாம் விதி', text_mr: 'न्यूटनचा दुसरा नियम' },
-            { id: 'c', text: "Newton's Third Law", text_hi: 'न्यूटन का तीसरा नियम', text_te: 'న్యూటన్ మూడవ నియమం', text_ta: 'நியூட்டனின் மூன்றாம் விதி', text_mr: 'न्यूटनचा तिसरा नियम' },
+            { id: 'c', text: "Newton's Third Law", text_hi: 'न्यूटन का तीसरा नियम', text_te: 'న్యూటన్ మూడవ నియమం', text_ta: 'நியூட்டனின் மூன்றாம் விதி', text_mr: 'న్యూटनचा तिसरा नियम' },
             { id: 'd', text: "Friction", text_hi: 'घर्षण', text_te: 'ఘర్షణ', text_ta: 'உராய்வு', text_mr: 'घर्षण' },
         ],
         correctAnswer: 'c',
@@ -321,28 +322,12 @@ export const missions: Mission[] = [
 export type Experiment = {
   id: string;
   title: string;
-  title_hi: string;
-  title_te: string;
-  title_ta: string;
-  title_mr: string;
   description: string;
-  description_hi: string;
-  description_te: string;
-  description_ta: string;
-  description_mr: string;
   imageUrl: string;
   imageHint: string;
   steps: {
     title: string;
-    title_hi: string;
-    title_te: string;
-    title_ta: string;
-    title_mr: string;
     description: string;
-    description_hi: string;
-    description_te: string;
-    description_ta: string;
-    description_mr: string;
     imageUrl: string;
     imageHint: string;
   }[];
@@ -352,74 +337,36 @@ export const experiments: Experiment[] = [
     {
         id: 'volcano-1',
         title: 'Build a Baking Soda Volcano',
-        title_hi: 'बेकिंग सोडा ज्वालामुखी बनाएं',
-        title_te: 'బేకింగ్ సోడా అగ్నిపర్వతాన్ని నిర్మించండి',
-        title_ta: 'பேக்கிங் சோடா எரிமலையை உருவாக்குங்கள்',
-        title_mr: 'बेकिंग सोडा ज्वालामुखी तयार करा',
         description: 'A classic and safe experiment to demonstrate a chemical reaction.',
-        description_hi: 'एक रासायनिक प्रतिक्रिया प्रदर्शित करने के लिए एक क्लासिक और सुरक्षित प्रयोग।',
-        description_te: 'రసాయన ప్రతిచర్యను ప్రదర్శించడానికి ఒక క్లాసిక్ మరియు సురక్షితమైన ప్రయోగం.',
-        description_ta: 'ஒரு வேதியியல் வினையை நிரூபிக்க ஒரு உன்னதமான மற்றும் பாதுகாப்பான சோதனை.',
-        description_mr: 'रासायनिक अभिक्रिया प्रदर्शित करण्यासाठी एक उत्कृष्ट आणि सुरक्षित प्रयोग.',
         imageUrl: 'https://picsum.photos/seed/exp1/600/400',
         imageHint: 'DIY volcano',
         steps: [
             {
                 title: 'Step 1: Build the Cone',
-                title_hi: 'चरण 1: शंकु बनाएं',
-                title_te: 'దశ 1: కోన్‌ను నిర్మించండి',
-                title_ta: 'படி 1: கூம்பை உருவாக்குங்கள்',
-                title_mr: 'पायरी 1: शंकू तयार करा',
                 description: 'Use a plastic bottle and build a cone around it using clay or soil.',
-                description_hi: 'एक प्लास्टिक की बोतल का उपयोग करें और उसके चारों ओर मिट्टी या क्ले से एक शंकु बनाएं।',
-                description_te: 'ఒక ప్లాస్టిక్ సీసాని ఉపయోగించి, దాని చుట్టూ బంకమట్టి లేదా మట్టితో ఒక కోన్‌ను నిర్మించండి.',
-                description_ta: 'ஒரு பிளாஸ்டிக் பாட்டிலைப் பயன்படுத்தி, அதைச் சுற்றி களிமண் அல்லது மண்ணால் ஒரு கூம்பை உருவாக்குங்கள்.',
-                description_mr: 'प्लास्टिकच्या बाटलीचा वापर करा आणि तिच्याभोवती चिकणमाती किंवा मातीने शंकू तयार करा.',
                 imageUrl: 'https://picsum.photos/seed/exp1-step1/600/400',
                 imageHint: 'clay bottle',
             },
             {
                 title: 'Step 2: Add Ingredients',
-                title_hi: 'चरण 2: सामग्री डालें',
-                title_te: 'దశ 2: పదార్థాలను జోడించండి',
-                title_ta: 'படி 2: பொருட்களைச் சேர்க்கவும்',
-                title_mr: 'पायरी 2: साहित्य घाला',
                 description: 'Fill the bottle halfway with warm water, add a few drops of dish soap and red food coloring.',
-                description_hi: 'बोतल को आधे रास्ते तक गर्म पानी से भरें, कुछ बूँदें डिश सोप और लाल खाद्य रंग डालें।',
-                description_te: 'సీసాని సగం వరకు గోరువెచ్చని నీటితో నింపి, కొన్ని చుక్కల డిష్ సోప్ మరియు ఎరుపు ఫుడ్ కలరింగ్ జోడించండి.',
-                description_ta: 'பாட்டிலை பாதி வழியில் வெதுவெதுப்பான நீரில் நிரப்பி, சில துளிகள் பாத்திரங்கழுவும் சோப்பு மற்றும் சிவப்பு உணவு வண்ணத்தைச் சேர்க்கவும்.',
-                description_mr: 'बाटली अर्धी गरम पाण्याने भरा, त्यात डिश सोपचे काही थेंब आणि लाल फूड कलरिंग घाला.',
                 imageUrl: 'https://picsum.photos/seed/exp1-step2/600/400',
                 imageHint: 'mixing liquids',
             },
             {
                 title: 'Step 3: Add Baking Soda',
-                title_hi: 'चरण 3: बेकिंग सोडा डालें',
-                title_te: 'దశ 3: బేకింగ్ సోడా జోడించండి',
-                title_ta: 'படி 3: பேக்கிங் சோடாவைச் சேர்க்கவும்',
-                title_mr: 'पायरी 3: बेकिंग सोडा घाला',
                 description: 'Add 2 tablespoons of baking soda to the liquid and stir it.',
-                description_hi: 'तरल में 2 बड़े चम्मच बेकिंग सोडा डालें और इसे हिलाएं।',
-                description_te: 'ద్రవంలో 2 టేబుల్ స్పూన్ల బేకింగ్ సోడా వేసి కలపండి.',
-                description_ta: 'திரவத்தில் 2 தேக்கரண்டி பேக்கிங் சோடாவைச் சேர்த்து கலக்கவும்.',
-                description_mr: 'द्रव्यात 2 चमचे बेकिंग सोडा घाला आणि ते ढवळा.',
                 imageUrl: 'https://picsum.photos/seed/exp1-step3/600/400',
                 imageHint: 'baking soda',
             },
             {
                 title: 'Step 4: The Eruption!',
-                title_hi: 'चरण 4: विस्फोट!',
-                title_te: 'దశ 4: విస్ఫోటనం!',
-                title_ta: 'படி 4: வெடிப்பு!',
-                title_mr: 'पायरी 4: उद्रेक!',
                 description: 'Pour vinegar into the bottle and watch your volcano erupt!',
-                description_hi: 'बोतल में सिरका डालें और अपने ज्वालामुखी को फूटते हुए देखें!',
-                description_te: 'సీసాలో వెనిగర్ పోసి, మీ అగ్నిపర్వతం విస్ఫోటనం చెందడాన్ని చూడండి!',
-                description_ta: 'பாட்டிலில் வினிகரை ஊற்றி உங்கள் எரிமலை வெடிப்பதைப் பாருங்கள்!',
-                description_mr: 'बाटलीत व्हिनेगर घाला आणि तुमचा ज्वालामुखी फुटताना पहा!',
                 imageUrl: 'https://picsum.photos/seed/exp1-step4/600/400',
                 imageHint: 'volcano erupting',
             },
         ]
     }
 ];
+
+    

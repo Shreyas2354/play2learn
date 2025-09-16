@@ -1,3 +1,4 @@
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { experiments } from "@/lib/data";
@@ -63,3 +64,5 @@ export default function ExperimentPage({ params }: { params: { id: string } }) {
     </div>
   );
 }
+
+    
