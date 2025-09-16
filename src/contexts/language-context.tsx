@@ -4,7 +4,7 @@ import { getLanguageText } from "@/lib/utils";
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 
-type Language = "en" | "hi" | "te" | "ta" | "mr";
+type Language = "en" | "hi" | "te";
 
 interface LanguageContextType {
   language: Language;

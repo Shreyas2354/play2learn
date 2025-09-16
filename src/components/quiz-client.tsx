@@ -29,6 +29,57 @@ import { Badge } from "./ui/badge";
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
+// Define a simple balloon component for the Chemistry game
+const Balloon = ({
+  option,
+  onClick,
+  disabled,
+  isPopped,
+  isCorrect,
+}: {
+  option: { id: string; text: string };
+  onClick: () => void;
+  disabled: boolean;
+  isPopped: boolean;
+  isCorrect: boolean;
+}) => {
+  const colors = [
+    'bg-red-300 hover:bg-red-400',
+    'bg-blue-300 hover:bg-blue-400',
+    'bg-yellow-300 hover:bg-yellow-400',
+    'bg-purple-300 hover:bg-purple-400',
+  ];
+  const randomColor = useMemo(() => colors[Math.floor(Math.random() * colors.length)], []);
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        "relative flex items-center justify-center w-40 h-52 rounded-[50%] text-white font-bold text-lg shadow-lg transition-transform transform duration-300",
+        !isPopped && "animate-float",
+        isPopped && isCorrect && "bg-green-500 animate-pop",
+        isPopped && !isCorrect && "bg-gray-400 animate-pop",
+        !isPopped && randomColor
+      )}
+    >
+      <span className={cn(isPopped ? 'opacity-0' : 'opacity-100')}>
+        {option.text}
+      </span>
+       {isPopped && isCorrect && (
+        <span className="absolute text-2xl">Correct!</span>
+      )}
+      <div className={cn(
+          "absolute -bottom-2 w-2 h-4 rounded-b-full",
+          !isPopped && randomColor,
+           isPopped && isCorrect && "bg-green-500",
+           isPopped && !isCorrect && "bg-gray-400",
+      )} />
+    </button>
+  );
+};
+
+
 export function QuizClient({ mission }: { mission: Mission }) {
   const router = useRouter();
   const { language, t } = useLanguage();
@@ -40,19 +91,12 @@ export function QuizClient({ mission }: { mission: Mission }) {
   const [answerState, setAnswerState] = useState<AnswerState>("unanswered");
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [correctStreak, setCorrectStreak] = useState(0);
-  const [difficultyLevel, setDifficultyLevel] = useState(1);
-  const [incorrectAttempts, setIncorrectAttempts] = useState(0);
-
+  
   const [hint, setHint] = useState<string | null>(null);
   const [hintLevel, setHintLevel] = useState(1);
   const [isHintLoading, setIsHintLoading] = useState(false);
 
-  const questions = useMemo(() => {
-    // In a real app, this would filter questions based on difficultyLevel
-    return mission.questions;
-  }, [mission.questions, difficultyLevel]);
-
+  const questions = mission.questions;
   const currentQuestion: Question = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
@@ -63,7 +107,6 @@ export function QuizClient({ mission }: { mission: Mission }) {
     setShowFeedback(false);
     setHint(null);
     setHintLevel(1);
-    setIncorrectAttempts(0);
   }, [currentQuestionIndex]);
 
   const handleTextToSpeech = () => {
@@ -83,7 +126,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
   };
 
   const handleGetHint = () => {
-    const hints = language === 'hi' ? currentQuestion.hints_hi : currentQuestion.hints;
+    const hints = language === 'hi' ? currentQuestion.hints_hi : language === 'te' ? currentQuestion.hints_te : currentQuestion.hints;
     if (hintLevel <= hints.length) {
       setHint(hints[hintLevel - 1]);
       setHintLevel(prev => prev + 1);
@@ -98,23 +141,21 @@ export function QuizClient({ mission }: { mission: Mission }) {
   
   const handleSubmit = () => {
     if (!selectedAnswer) return;
+    
     setShowFeedback(true);
+    
     if (selectedAnswer === currentQuestion.correctAnswer) {
       setAnswerState("correct");
       setScore((s) => s + 1);
-      setCorrectStreak((s) => s + 1);
-      if (correctStreak + 1 >= 2) {
-        setDifficultyLevel((d) => Math.min(d + 1, 3));
-        toast({ title: "Great job! Difficulty increasing!" });
-      }
     } else {
       setAnswerState("incorrect");
-      setCorrectStreak(0);
-      setIncorrectAttempts(a => a + 1);
-      if (difficultyLevel > 1) {
-        setDifficultyLevel((d) => Math.max(d - 1, 1));
-        toast({ title: "That's okay, let's try an easier concept." });
-      }
+    }
+    
+    // For balloon game, next question loads after a delay
+    if (mission.subject !== 'chemistry') {
+      // For other subjects, wait for user to click next
+    } else {
+       setTimeout(() => handleNext(), 1500);
     }
   };
 
@@ -129,6 +170,60 @@ export function QuizClient({ mission }: { mission: Mission }) {
       });
     }
   };
+
+  const renderQuizInterface = () => {
+    if (mission.subject === 'chemistry') {
+      return (
+        <div className="flex justify-center items-center flex-wrap gap-8 min-h-[300px]">
+          {currentQuestion.options.map((option) => (
+            <Balloon
+              key={option.id}
+              option={{id: option.id, text: t('text', option)}}
+              onClick={() => {
+                if(!showFeedback) {
+                  setSelectedAnswer(option.id);
+                  handleSubmit();
+                }
+              }}
+              disabled={showFeedback}
+              isPopped={showFeedback && selectedAnswer === option.id}
+              isCorrect={showFeedback && selectedAnswer === option.id && selectedAnswer === currentQuestion.correctAnswer}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    // Default multiple-choice interface
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {currentQuestion.options.map((option) => (
+          <Button
+            key={option.id}
+            variant="outline"
+            size="lg"
+            className={cn(
+              "h-auto justify-start text-left whitespace-normal py-4",
+              selectedAnswer === option.id &&
+                "ring-2 ring-primary ring-offset-2",
+              showFeedback &&
+                option.id === currentQuestion.correctAnswer &&
+                "bg-green-100 border-green-400 text-green-900",
+              showFeedback &&
+                selectedAnswer === option.id &&
+                selectedAnswer !== currentQuestion.correctAnswer &&
+                "bg-red-100 border-red-400 text-red-900"
+            )}
+            onClick={() => !showFeedback && setSelectedAnswer(option.id)}
+            disabled={showFeedback}
+          >
+            <span className="mr-4 font-bold text-accent">{option.id.toUpperCase()}.</span>
+            <span>{t('text', option)}</span>
+          </Button>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -151,33 +246,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
         </CardHeader>
         <CardContent className="space-y-4">
           <Progress value={progress} className="w-full" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {currentQuestion.options.map((option) => (
-              <Button
-                key={option.id}
-                variant="outline"
-                size="lg"
-                className={cn(
-                  "h-auto justify-start text-left whitespace-normal py-4",
-                  selectedAnswer === option.id &&
-                    "ring-2 ring-primary ring-offset-2",
-                  showFeedback &&
-                    option.id === currentQuestion.correctAnswer &&
-                    "bg-green-100 border-green-400 text-green-900",
-                  showFeedback &&
-                    selectedAnswer === option.id &&
-                    selectedAnswer !== currentQuestion.correctAnswer &&
-                    "bg-red-100 border-red-400 text-red-900"
-                )}
-                onClick={() => !showFeedback && setSelectedAnswer(option.id)}
-                disabled={showFeedback}
-              >
-                <span className="mr-4 font-bold text-accent">{option.id.toUpperCase()}.</span>
-                <span>{t('text', option)}</span>
-              </Button>
-            ))}
-          </div>
-          
+          {renderQuizInterface()}
           {hint && (
              <Alert className="bg-accent/10 border-accent/20">
                <Lightbulb className="h-4 w-4" />
@@ -185,7 +254,6 @@ export function QuizClient({ mission }: { mission: Mission }) {
                <AlertDescription>{hint}</AlertDescription>
              </Alert>
           )}
-
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <Button variant="ghost" onClick={handleGetHint} disabled={isHintLoading || showFeedback}>
@@ -197,23 +265,25 @@ export function QuizClient({ mission }: { mission: Mission }) {
             {hintLevel > 1 ? "Get a better hint" : "Get a hint"}
           </Button>
           
-          {showFeedback ? (
-            <div className="flex items-center gap-4">
-                {answerState === 'correct' && <Alert variant="default" className="p-2 border-green-500 bg-green-50"><CheckCircle2 className="text-green-500 h-5 w-5 mr-2" /><AlertDescription className="text-green-700 font-semibold">Correct!</AlertDescription></Alert>}
-                {answerState === 'incorrect' && <Alert variant="destructive" className="p-2 bg-red-50"><XCircle className="h-5 w-5 mr-2" /><AlertDescription className="font-semibold">Not quite, try again next time!</AlertDescription></Alert>}
-                <Button onClick={handleNext} disabled={isPending}>
-                  {currentQuestionIndex === questions.length - 1 ? 'Finish Mission' : 'Next Question'}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-            </div>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              disabled={!selectedAnswer}
-              className="bg-accent hover:bg-accent/90"
-            >
-              Submit Answer
-            </Button>
+          {mission.subject !== 'chemistry' && (
+            showFeedback ? (
+              <div className="flex items-center gap-4">
+                  {answerState === 'correct' && <Alert variant="default" className="p-2 border-green-500 bg-green-50"><CheckCircle2 className="text-green-500 h-5 w-5 mr-2" /><AlertDescription className="text-green-700 font-semibold">Correct!</AlertDescription></Alert>}
+                  {answerState === 'incorrect' && <Alert variant="destructive" className="p-2 bg-red-50"><XCircle className="h-5 w-5 mr-2" /><AlertDescription className="font-semibold">Not quite, try again next time!</AlertDescription></Alert>}
+                  <Button onClick={handleNext} disabled={isPending}>
+                    {currentQuestionIndex === questions.length - 1 ? 'Finish Mission' : 'Next Question'}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                disabled={!selectedAnswer}
+                className="bg-accent hover:bg-accent/90"
+              >
+                Submit Answer
+              </Button>
+            )
           )}
         </CardFooter>
       </Card>
