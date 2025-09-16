@@ -103,6 +103,14 @@ export function QuizClient({ mission }: { mission: Mission }) {
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   useEffect(() => {
+    const progressData = {
+        lastMissionId: mission.id,
+        lastQuestionIndex: currentQuestionIndex,
+    };
+    localStorage.setItem('user-progress', JSON.stringify(progressData));
+  }, [currentQuestionIndex, mission.id]);
+
+  useEffect(() => {
     // Reset state for new question
     setSelectedAnswer(null);
     setAnswerState("unanswered");

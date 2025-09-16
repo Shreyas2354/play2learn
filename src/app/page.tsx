@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Card,
@@ -14,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ArrowRight, Award, Coins, Rocket, Trophy, MessageSquare, FlaskConical, Wifi, User, Atom } from 'lucide-react';
 import { missions, experiments } from '@/lib/data';
+import type { Mission } from '@/lib/data';
 import { useLanguage } from '@/contexts/language-context';
 import {
   Table,
@@ -24,11 +26,35 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function DashboardPage() {
-  const firstMission = missions[0];
-  const firstExperiment = experiments[0];
-  const { t, language } = useLanguage();
+type UserProgress = {
+  lastMissionId: string;
+  lastQuestionIndex: number;
+};
 
+export default function DashboardPage() {
+  const { t } = useLanguage();
+  const [lastMission, setLastMission] = useState<Mission | null>(null);
+  const [lastQuestionIndex, setLastQuestionIndex] = useState(0);
+
+  useEffect(() => {
+    const storedProgress = localStorage.getItem('user-progress');
+    let missionToShow = missions[0];
+    let questionIndex = 0;
+
+    if (storedProgress) {
+      const progress: UserProgress = JSON.parse(storedProgress);
+      const foundMission = missions.find(m => m.id === progress.lastMissionId);
+      if (foundMission) {
+        missionToShow = foundMission;
+        questionIndex = progress.lastQuestionIndex;
+      }
+    }
+    setLastMission(missionToShow);
+    setLastQuestionIndex(questionIndex);
+  }, []);
+  
+  const firstExperiment = experiments[0];
+  
   const leaderboardData = [
     { rank: 1, name: "Priya P.", score: 1250 },
     { rank: 2, name: "You", score: 1250 },
@@ -121,6 +147,12 @@ export default function DashboardPage() {
     },
   };
 
+  const missionProgress = lastMission ? ((lastQuestionIndex) / lastMission.questions.length) * 100 : 0;
+  const missionProgressText = lastMission ? `You are on question ${lastQuestionIndex + 1} of ${lastMission.questions.length}.` : "Start a new mission!";
+  if (!lastMission) {
+    return null; // or a loading spinner
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -185,15 +217,15 @@ export default function DashboardPage() {
             <CardTitle className="font-headline text-xl">
                 {t('continueAdventure', pageText)}
             </CardTitle>
-            <CardDescription>{t('title', firstMission)}</CardDescription>
+            <CardDescription>{t('title', lastMission)}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-                <Progress value={40} className="h-2 mb-2" />
-                <p className="text-sm text-muted-foreground">You are on question 2 of 5.</p>
+                <Progress value={missionProgress} className="h-2 mb-2" />
+                <p className="text-sm text-muted-foreground">{missionProgressText}</p>
             </CardContent>
             <CardFooter>
                  <Button asChild className="w-full">
-                    <Link href={`/missions/${firstMission.id}`}>
+                    <Link href={`/missions/${lastMission.id}`}>
                     {t('startMission', pageText)} <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
