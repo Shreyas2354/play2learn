@@ -20,7 +20,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
         <div>
           <h1 className="text-3xl font-bold font-headline tracking-tight">
-            Welcome to EduQuest!
+            Welcome to play2learn!
           </h1>
           <p className="text-muted-foreground">
             Your adventure in STEM starts here. Let&apos;s learn and grow!

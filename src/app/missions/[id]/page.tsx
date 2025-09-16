@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Mission Not Found" };
   }
   return {
-    title: `${mission.title} | EduQuest`,
+    title: `${mission.title} | play2learn`,
   };
 }
 

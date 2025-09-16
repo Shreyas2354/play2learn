@@ -15,8 +15,8 @@ import { SiteHeader } from '@/components/site-header';
 import { Icons } from '@/components/icons';
 
 export const metadata: Metadata = {
-  title: 'EduQuest: STEM Adventures',
-  description: 'A gamified learning platform for rural students.',
+  title: 'play2learn: STEM Adventures',
+  description: 'A gamified learning platform for rural students that works offline.',
 };
 
 export default function RootLayout({
@@ -48,7 +48,7 @@ export default function RootLayout({
                   className="flex items-center gap-2 font-headline font-bold text-2xl text-primary"
                 >
                   <Icons.logo className="h-8 w-8" />
-                  <span>EduQuest</span>
+                  <span>play2learn</span>
                 </a>
               </SidebarHeader>
               <SidebarContent>
