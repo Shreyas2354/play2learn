@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
+import { Input } from "./ui/input";
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
@@ -95,6 +96,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
   const [hint, setHint] = useState<string | null>(null);
   const [hintLevel, setHintLevel] = useState(1);
   const [isHintLoading, setIsHintLoading] = useState(false);
+  const [puzzleAnswer, setPuzzleAnswer] = useState("");
 
   const questions = mission.questions;
   const currentQuestion: Question = questions[currentQuestionIndex];
@@ -107,6 +109,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
     setShowFeedback(false);
     setHint(null);
     setHintLevel(1);
+    setPuzzleAnswer("");
   }, [currentQuestionIndex]);
 
   const handleTextToSpeech = () => {
@@ -140,21 +143,19 @@ export function QuizClient({ mission }: { mission: Mission }) {
   };
   
   const handleSubmit = () => {
-    if (!selectedAnswer) return;
+    const answer = mission.subject === 'mathematics' ? puzzleAnswer : selectedAnswer;
+    if (!answer) return;
     
     setShowFeedback(true);
     
-    if (selectedAnswer === currentQuestion.correctAnswer) {
+    if (answer.trim().toLowerCase() === currentQuestion.correctAnswer.toLowerCase()) {
       setAnswerState("correct");
       setScore((s) => s + 1);
     } else {
       setAnswerState("incorrect");
     }
     
-    // For balloon game, next question loads after a delay
-    if (mission.subject !== 'chemistry') {
-      // For other subjects, wait for user to click next
-    } else {
+    if (mission.subject === 'chemistry') {
        setTimeout(() => handleNext(), 1500);
     }
   };
@@ -172,7 +173,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
   };
 
   const renderQuizInterface = () => {
-    if (mission.subject === 'chemistry') {
+    if (mission.subject === 'chemistry' && currentQuestion.options) {
       return (
         <div className="flex justify-center items-center flex-wrap gap-8 min-h-[300px]">
           {currentQuestion.options.map((option) => (
@@ -193,11 +194,26 @@ export function QuizClient({ mission }: { mission: Mission }) {
         </div>
       );
     }
+    
+    if (mission.subject === 'mathematics') {
+        return (
+          <div className="flex flex-col items-center justify-center gap-4 min-h-[150px] p-4">
+             <Input 
+                type="text"
+                value={puzzleAnswer}
+                onChange={(e) => setPuzzleAnswer(e.target.value)}
+                placeholder={t('enterAnswer', {en: 'Enter your answer', hi: 'अपना उत्तर दर्ज करें', te: 'మీ సమాధానం నమోదు చేయండి'})}
+                className="max-w-xs text-center text-2xl h-14 font-bold"
+                disabled={showFeedback}
+             />
+          </div>
+        )
+    }
 
     // Default multiple-choice interface
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {currentQuestion.options.map((option) => (
+        {currentQuestion.options?.map((option) => (
           <Button
             key={option.id}
             variant="outline"
@@ -278,10 +294,10 @@ export function QuizClient({ mission }: { mission: Mission }) {
             ) : (
               <Button
                 onClick={handleSubmit}
-                disabled={!selectedAnswer}
+                disabled={mission.subject === 'mathematics' ? !puzzleAnswer : !selectedAnswer}
                 className="bg-accent hover:bg-accent/90"
               >
-                Submit Answer
+                {mission.subject === 'mathematics' ? 'Check Answer' : 'Submit Answer'}
               </Button>
             )
           )}
