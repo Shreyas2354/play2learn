@@ -1,3 +1,4 @@
+"use client";
 
 import Link from 'next/link';
 import {
@@ -8,16 +9,32 @@ import {
 } from '@/components/ui/card';
 import { ArrowRight, Microscope, Atom, TestTube, Calculator } from 'lucide-react';
 import { subjects } from '@/lib/data';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function MissionsPage() {
+  const { t } = useLanguage();
+  
+  const pageText = {
+    title: {
+      en: "Choose a Subject",
+      hi: "एक विषय चुनें",
+      te: "ఒక సబ్జెక్టును ఎంచుకోండి",
+    },
+    description: {
+      en: "Select a subject to start your learning adventure!",
+      hi: "अपना सीखने का रोमांच शुरू करने के लिए एक विषय चुनें!",
+      te: "మీ అభ్యాస సాహసం ప్రారంభించడానికి ఒక సబ్జెక్టును ఎంచుకోండి!",
+    }
+  }
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-headline tracking-tight">
-          Choose a Subject
+          {t('title', pageText)}
         </h1>
         <p className="text-muted-foreground">
-          Select a subject to start your learning adventure!
+          {t('description', pageText)}
         </p>
       </div>
 
@@ -35,8 +52,8 @@ export default function MissionsPage() {
                       {subject.id === 'mathematics' && <Calculator className="h-6 w-6 text-white" />}
                     </div>
                     <div>
-                      <CardTitle className="font-headline">{subject.title}</CardTitle>
-                      <CardDescription>{subject.description}</CardDescription>
+                      <CardTitle className="font-headline">{t('title', subject)}</CardTitle>
+                      <CardDescription>{t('description', subject)}</CardDescription>
                     </div>
                   </div>
                   <ArrowRight className="h-5 w-5 text-muted-foreground" />

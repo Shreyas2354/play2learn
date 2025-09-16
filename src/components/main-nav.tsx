@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -17,17 +16,27 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/missions", label: "Missions", icon: Rocket },
-  { href: "/experiments", label: "Experiments", icon: FlaskConical },
-  { href: "/multiplayer", label: "Multiplayer", icon: Users },
-  { href: "/teacher-dashboard", label: "Teacher Dashboard", icon: BarChart3 },
-];
+import { useLanguage } from "@/contexts/language-context";
 
 export function MainNav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const navText = {
+      dashboard: { en: "Dashboard", hi: "डैशबोर्ड", te: "డాష్‌బోర్డ్" },
+      missions: { en: "Missions", hi: "मिशन", te: "మిషన్లు" },
+      experiments: { en: "Experiments", hi: "प्रयोग", te: "ప్రయోగాలు" },
+      multiplayer: { en: "Multiplayer", hi: "मल्टीप्लेयर", te: "మల్టీప్లేయర్" },
+      teacherDashboard: { en: "Teacher Dashboard", hi: "शिक्षक डैशबोर्ड", te: "ఉపాధ్యాయ డాష్‌బోర్డ్" },
+  }
+
+  const navItems = [
+    { href: "/", label: t('dashboard', navText), icon: LayoutDashboard },
+    { href: "/missions", label: t('missions', navText), icon: Rocket },
+    { href: "/experiments", label: t('experiments', navText), icon: FlaskConical },
+    { href: "/multiplayer", label: t('multiplayer', navText), icon: Users },
+    { href: "/teacher-dashboard", label: t('teacherDashboard', navText), icon: BarChart3 },
+  ];
 
   return (
     <nav className="p-2">
@@ -70,5 +79,3 @@ export function MainNav() {
     </nav>
   );
 }
-
-    

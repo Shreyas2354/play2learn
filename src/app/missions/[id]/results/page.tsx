@@ -159,7 +159,7 @@ export default function ResultsPage() {
             <Badge variant="default" className={`w-20 h-20 flex items-center justify-center rounded-lg text-5xl ${mission.badge_color}`}>
               {mission.badge_emoji}
             </Badge>
-            <p className="font-semibold">{mission.badgeId}</p>
+            <p className="font-semibold">{t('badgeId', mission)}</p>
           </CardContent>
         </Card>
       </div>
