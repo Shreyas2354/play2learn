@@ -1,59 +1,48 @@
+
 import Link from 'next/link';
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight } from 'lucide-react';
-import { missions } from '@/lib/data';
+import { ArrowRight, Microscope, Atom, TestTube } from 'lucide-react';
+import { subjects } from '@/lib/data';
 
 export default function MissionsPage() {
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-headline tracking-tight">
-          Choose Your Mission
+          Choose a Subject
         </h1>
         <p className="text-muted-foreground">
-          Select an adventure to start learning and earning rewards!
+          Select a subject to start your learning adventure!
         </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {missions.map((mission) => (
-          <Card key={mission.id} className="flex flex-col shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader>
-              <div className="flex items-center gap-4">
-                <Badge
-                  variant="default"
-                  className={`w-12 h-12 flex items-center justify-center rounded-lg text-2xl ${mission.badge_color}`}
-                >
-                  {mission.badge_emoji}
-                </Badge>
-                <div>
-                  <CardTitle className="font-headline">{mission.title}</CardTitle>
-                  <CardDescription>{mission.description}</CardDescription>
+        {subjects.map((subject) => (
+          <Link href={`/missions/subjects/${subject.id}`} key={subject.id}>
+            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col justify-between">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className='flex items-center gap-4'>
+                    <div className={`p-3 rounded-md ${subject.color}`}>
+                      {subject.id === 'physics' && <Atom className="h-6 w-6 text-white" />}
+                      {subject.id === 'biology' && <Microscope className="h-6 w-6 text-white" />}
+                      {subject.id === 'chemistry' && <TestTube className="h-6 w-6 text-white" />}
+                    </div>
+                    <div>
+                      <CardTitle className="font-headline">{subject.title}</CardTitle>
+                      <CardDescription>{subject.description}</CardDescription>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground" />
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <p className="text-sm text-muted-foreground">
-                {mission.questions.length} questions
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button asChild className="w-full">
-                <Link href={`/missions/${mission.id}`}>
-                  Start Mission <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
+              </CardHeader>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>

@@ -32,11 +32,27 @@ export type Mission = {
   badgeId: string;
   badge_emoji: string;
   badge_color: string;
+  subject: 'physics' | 'biology' | 'chemistry' | 'technology' | 'engineering' | 'mathematics';
 };
+
+export type Subject = {
+    id: 'physics' | 'biology' | 'chemistry' | 'technology' | 'engineering' | 'mathematics';
+    title: string;
+    description: string;
+    color: string;
+}
+
+export const subjects: Subject[] = [
+    { id: 'physics', title: 'Physics', description: 'Explore the laws of the universe.', color: 'bg-blue-500' },
+    { id: 'biology', title: 'Biology', description: 'Discover the wonders of life.', color: 'bg-green-500' },
+    { id: 'chemistry', title: 'Chemistry', description: 'Uncover the building blocks of matter.', color: 'bg-purple-500' },
+]
+
 
 export const missions: Mission[] = [
   {
     id: 'physics-1',
+    subject: 'physics',
     title: 'Journey into Forces',
     title_hi: 'बलों की यात्रा',
     title_te: 'శక్తుల లోకి ప్రయాణం',
@@ -142,8 +158,8 @@ export const missions: Mission[] = [
         text_mr: 'जर तुम्ही भिंतीला ढकलले, तर भिंत तुम्हाला समान आणि विरुद्ध बलाने मागे ढकलते. हे कशाचे उदाहरण आहे:',
         options: [
             { id: 'a', text: "Newton's First Law", text_hi: 'न्यूटन का पहला नियम', text_te: 'న్యూటన్ మొదటి నియమం', text_ta: 'நியூட்டனின் முதல் விதி', text_mr: 'न्यूटनचा पहिला नियम' },
-            { id: 'b', text: "Newton's Second Law", text_hi: 'न्यूटन का दूसरा नियम', text_te: 'న్యూటన్ రెండవ నియమం', text_ta: 'நியூட்டனின் இரண்டாம் விதி', text_mr: 'న్యూटनचा दुसरा नियम' },
-            { id: 'c', text: "Newton's Third Law", text_hi: 'न्यूटन का तीसरा नियम', text_te: 'న్యూటన్ మూడవ నియమం', text_ta: 'நியூட்டனின் மூன்றாம் விதி', text_mr: 'న్యూटनचा तिसरा नियम' },
+            { id: 'b', text: "Newton's Second Law", text_hi: 'न्यूटन का दूसरा नियम', text_te: 'న్యూటన్ రెండవ నియమం', text_ta: 'நியூட்டனின் இரண்டாம் விதி', text_mr: 'न्यूटनचा दुसरा नियम' },
+            { id: 'c', text: "Newton's Third Law", text_hi: 'न्यूटन का तीसरा नियम', text_te: 'న్యూటన్ మూడవ నియమం', text_ta: 'நியூட்டனின் மூன்றாம் விதி', text_mr: 'न्यूटनचा तिसरा नियम' },
             { id: 'd', text: "Friction", text_hi: 'घर्षण', text_te: 'ఘర్షణ', text_ta: 'உராய்வு', text_mr: 'घर्षण' },
         ],
         correctAnswer: 'c',
@@ -219,6 +235,7 @@ export const missions: Mission[] = [
   },
   {
     id: 'biology-1',
+    subject: 'biology',
     title: 'The Secret Life of Plants',
     title_hi: 'पौधों का गुप्त जीवन',
     title_te: 'మొక్కల రహస్య జీవితం',
