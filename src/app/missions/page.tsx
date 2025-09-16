@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ArrowRight, Microscope, Atom, TestTube } from 'lucide-react';
+import { ArrowRight, Microscope, Atom, TestTube, Calculator } from 'lucide-react';
 import { subjects } from '@/lib/data';
 
 export default function MissionsPage() {
@@ -32,6 +32,7 @@ export default function MissionsPage() {
                       {subject.id === 'physics' && <Atom className="h-6 w-6 text-white" />}
                       {subject.id === 'biology' && <Microscope className="h-6 w-6 text-white" />}
                       {subject.id === 'chemistry' && <TestTube className="h-6 w-6 text-white" />}
+                      {subject.id === 'mathematics' && <Calculator className="h-6 w-6 text-white" />}
                     </div>
                     <div>
                       <CardTitle className="font-headline">{subject.title}</CardTitle>
