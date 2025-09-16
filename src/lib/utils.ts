@@ -12,8 +12,11 @@ export function getLanguageText(
   fallbackKey?: string
 ) {
   const langKey = `${key}_${lang}`;
-  if (item && typeof item === 'object' && langKey in item) {
+  if (item && typeof item === 'object' && item[langKey]) {
     return item[langKey];
   }
-  return item?.[key] || item?.[fallbackKey || ''] || '';
+  if (item && typeof item === 'object' && item[key] && item[key][lang]) {
+    return item[key][lang];
+  }
+  return item?.[key]?.[lang] || item?.[key]?.['en'] || item?.[key] || item?.[fallbackKey || ''] || '';
 }
