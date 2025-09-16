@@ -26,10 +26,10 @@ export default function SubjectPage({ params }: { params: { id: string } }) {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-headline tracking-tight">
-          {subject.title} Missions
+          {subject.title} Levels
         </h1>
         <p className="text-muted-foreground">
-          Select an adventure to start learning and earning rewards!
+          Select a level to start learning and earning rewards!
         </p>
       </div>
 
@@ -59,7 +59,7 @@ export default function SubjectPage({ params }: { params: { id: string } }) {
               <CardFooter>
                 <Button asChild className="w-full">
                   <Link href={`/missions/${mission.id}`}>
-                    Start Mission <ArrowRight className="ml-2 h-4 w-4" />
+                    Start Level <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </CardFooter>
@@ -68,7 +68,7 @@ export default function SubjectPage({ params }: { params: { id: string } }) {
         </div>
       ) : (
         <Card className="text-center p-8">
-            <CardTitle>No missions yet!</CardTitle>
+            <CardTitle>No levels yet!</CardTitle>
             <CardDescription>Check back soon for new adventures in {subject.title}.</CardDescription>
         </Card>
       )}
