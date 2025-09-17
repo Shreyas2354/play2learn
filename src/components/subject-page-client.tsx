@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -20,7 +21,7 @@ export function SubjectPageClient({ subject, subjectMissions }: { subject: Subje
   const { t } = useLanguage();
   
   // In a real app, this would come from user progress state
-  const completedLevels = 1; 
+  const completedLevels = 6; 
 
   const pageText = {
     levels: {
