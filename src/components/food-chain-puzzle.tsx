@@ -166,3 +166,5 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
       </div>
   );
 }
+
+    

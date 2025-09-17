@@ -17,11 +17,11 @@ type BalloonProps = {
 };
 
 const colors = [
-    'bg-red-300 hover:bg-red-400',
-    'bg-blue-300 hover:bg-blue-400',
-    'bg-green-300 hover:bg-green-400',
-    'bg-yellow-300 hover:bg-yellow-400',
-    'bg-purple-300 hover:bg-purple-400',
+    'bg-red-300',
+    'bg-blue-300',
+    'bg-green-300',
+    'bg-yellow-300',
+    'bg-purple-300',
 ];
 
 export function Balloon({ option, onClick, disabled, isSelected, isCorrect, showFeedback }: BalloonProps) {
@@ -36,27 +36,36 @@ export function Balloon({ option, onClick, disabled, isSelected, isCorrect, show
 
   const handleClick = () => {
     if (disabled) return;
-    setIsPopped(true);
-    setTimeout(() => onClick(option.id), 300); // Wait for pop animation to start
+    onClick(option.id)
   };
 
-  const feedbackClass = showFeedback
-    ? isCorrect
-      ? 'border-4 border-green-500 scale-110'
-      : isSelected
-      ? 'border-4 border-red-500 opacity-50'
-      : 'opacity-50'
-    : '';
+  useEffect(() => {
+    if (showFeedback && isSelected) {
+        setIsPopped(true);
+    }
+  }, [showFeedback, isSelected]);
 
-  if (showFeedback && !isSelected && !isCorrect) {
-      return null;
+  const feedbackClass = showFeedback && isSelected
+    ? isCorrect
+      ? 'bg-green-500'
+      : 'bg-red-500'
+    : color;
+  
+  if (isPopped) {
+    return (
+        <div className="w-40 h-52 flex items-center justify-center">
+            <div className={cn(
+                "w-12 h-12 rounded-full animate-pop",
+                isCorrect ? 'bg-green-500' : 'bg-red-500'
+            )}></div>
+        </div>
+    )
   }
 
   return (
     <div
       className={cn(
-        'relative animate-float',
-        (isPopped || (showFeedback && isSelected)) && 'animate-pop'
+        'relative animate-float'
       )}
       style={{ animationDelay }}
     >
@@ -65,17 +74,18 @@ export function Balloon({ option, onClick, disabled, isSelected, isCorrect, show
         disabled={disabled}
         className={cn(
           'relative flex items-center justify-center w-40 h-52 rounded-[50%] text-white font-bold text-3xl shadow-lg transition-all duration-300 transform hover:scale-110',
-          color,
-          isSelected && !showFeedback && 'ring-4 ring-primary ring-offset-2',
-          feedbackClass
+          feedbackClass,
+          isSelected && !showFeedback && 'ring-4 ring-primary ring-offset-2'
         )}
       >
         <span>{option.text}</span>
         <div className={cn(
             "absolute -bottom-2 w-2 h-4 rounded-b-full",
-            color
+            feedbackClass
         )}></div>
       </button>
     </div>
   );
 }
+
+    

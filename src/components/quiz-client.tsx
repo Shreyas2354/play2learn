@@ -2,7 +2,7 @@
 "use client";
 
 import type { Mission, Question } from "@/lib/data";
-import { useState, useEffect, useMemo, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/language-context";
 import {
@@ -24,15 +24,13 @@ import {
   Loader2,
   Volume2,
   ArrowRight,
-  GripVertical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
-import { Input } from "./ui/input";
-import { FoodChainPuzzle } from "./food-chain-puzzle";
 import { PicturePuzzle } from "./picture-puzzle";
 import { getHintAction } from "@/app/actions/get-hint";
 import { Balloon } from "./balloon";
+import { FoodChainPuzzle } from "./food-chain-puzzle";
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
@@ -119,7 +117,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
   
   const handleSubmit = () => {
     let answer = selectedAnswer;
-    if (currentQuestion.type === 'puzzle' || currentQuestion.type === 'food-chain-visual' || currentQuestion.type === 'picture-puzzle') {
+    if (currentQuestion.type === 'food-chain-visual' || currentQuestion.type === 'picture-puzzle') {
         answer = puzzleAnswer;
     }
 
@@ -183,8 +181,26 @@ export function QuizClient({ mission }: { mission: Mission }) {
                 />
               ))}
             </div>
-          );
+        );
     }
+
+    if (mission.subject === 'chemistry' && currentQuestion.type === 'mcq' && currentQuestion.options) {
+      return (
+          <div className="flex justify-center items-center gap-4 flex-wrap min-h-[250px]">
+            {currentQuestion.options?.map((option) => (
+              <Balloon
+                key={option.id}
+                option={option}
+                onClick={(optionId) => !showFeedback && setSelectedAnswer(optionId)}
+                disabled={showFeedback}
+                isSelected={selectedAnswer === option.id}
+                isCorrect={option.id === currentQuestion.correctAnswer}
+                showFeedback={showFeedback}
+              />
+            ))}
+          </div>
+        );
+  }
 
     // Default multiple-choice interface
     return (
@@ -271,12 +287,12 @@ export function QuizClient({ mission }: { mission: Mission }) {
               onClick={handleSubmit}
               disabled={
                   (currentQuestion.type === 'mcq' && !selectedAnswer) ||
-                  ((currentQuestion.type === 'puzzle' || currentQuestion.type === 'picture-puzzle') && !puzzleAnswer) ||
+                  (currentQuestion.type === 'picture-puzzle' && !puzzleAnswer) ||
                   (currentQuestion.type === 'food-chain-visual' && puzzleAnswer.split(',').some(p => p === ''))
               }
               className="bg-accent hover:bg-accent/90"
             >
-              {currentQuestion.type === 'puzzle' ? 'Check Answer' : 'Submit Answer'}
+              Submit Answer
             </Button>
           )}
         </CardFooter>
@@ -284,3 +300,5 @@ export function QuizClient({ mission }: { mission: Mission }) {
     </div>
   );
 }
+
+    
