@@ -2,17 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { LanguageProvider } from '@/contexts/language-context';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarInset,
-  SidebarProvider,
-} from '@/components/ui/sidebar';
-import { MainNav } from '@/components/main-nav';
-import { SiteHeader } from '@/components/site-header';
-import { Icons } from '@/components/icons';
+import { AppProviders } from '@/components/app-providers';
 
 export const metadata: Metadata = {
   title: 'play2learn: STEM Adventures',
@@ -39,29 +29,10 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('font-body antialiased')}>
-        <LanguageProvider>
-          <SidebarProvider>
-            <Sidebar>
-              <SidebarHeader className="p-4">
-                <a
-                  href="/"
-                  className="flex items-center gap-2 font-headline font-bold text-2xl text-primary"
-                >
-                  <Icons.logo className="h-8 w-8" />
-                  <span>play2learn</span>
-                </a>
-              </SidebarHeader>
-              <SidebarContent>
-                <MainNav />
-              </SidebarContent>
-            </Sidebar>
-            <SidebarInset>
-              <SiteHeader />
-              <main className="p-4 sm:p-6 lg:p-8">{children}</main>
-            </SidebarInset>
-          </SidebarProvider>
-          <Toaster />
-        </LanguageProvider>
+        <AppProviders>
+          {children}
+        </AppProviders>
+        <Toaster />
       </body>
     </html>
   );
