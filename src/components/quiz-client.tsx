@@ -48,13 +48,19 @@ const Balloon = ({
   isPopped: boolean;
   isCorrect: boolean;
 }) => {
-  const colors = [
-    'bg-red-300 hover:bg-red-400',
-    'bg-blue-300 hover:bg-blue-400',
-    'bg-yellow-300 hover:bg-yellow-400',
-    'bg-purple-300 hover:bg-purple-400',
-  ];
-  const randomColor = useMemo(() => colors[Math.floor(Math.random() * colors.length)], []);
+  const [colorClass, setColorClass] = useState('');
+
+  useEffect(() => {
+    // This code runs only on the client, after hydration
+    const colors = [
+      'bg-red-300 hover:bg-red-400',
+      'bg-blue-300 hover:bg-blue-400',
+      'bg-yellow-300 hover:bg-yellow-400',
+      'bg-purple-300 hover:bg-purple-400',
+    ];
+    setColorClass(colors[Math.floor(Math.random() * colors.length)]);
+  }, []);
+
 
   return (
     <button
@@ -65,7 +71,7 @@ const Balloon = ({
         !isPopped && "animate-float",
         isPopped && isCorrect && "bg-green-500 animate-pop",
         isPopped && !isCorrect && "bg-gray-400 animate-pop",
-        !isPopped && randomColor
+        !isPopped && colorClass
       )}
     >
       <span className={cn(isPopped ? 'opacity-0' : 'opacity-100')}>
@@ -76,7 +82,7 @@ const Balloon = ({
       )}
       <div className={cn(
           "absolute -bottom-2 w-2 h-4 rounded-b-full",
-          !isPopped && randomColor,
+          !isPopped && colorClass,
            isPopped && isCorrect && "bg-green-500",
            isPopped && !isCorrect && "bg-gray-400",
       )} />
