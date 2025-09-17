@@ -44,40 +44,42 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
 
     const { source, destination } = result;
 
-    const newItems = Array.from(items);
-    const newSlots = Array.from(slots);
+    let newItems = [...items];
+    let newSlots = [...slots];
 
+    // Item being dragged
+    let draggedItem: Item | null = null;
+
+    // Case 1: Dragging from the item bank
     if (source.droppableId === 'items') {
-      const [movedItem] = newItems.splice(source.index, 1);
-      
-      if (destination.droppableId.startsWith('slot-')) {
+        draggedItem = newItems[source.index];
+        newItems.splice(source.index, 1);
+    } 
+    // Case 2: Dragging from a slot
+    else if (source.droppableId.startsWith('slot-')) {
+        const slotIndex = parseInt(source.droppableId.split('-')[1]);
+        draggedItem = newSlots[slotIndex];
+        newSlots[slotIndex] = null;
+    }
+
+    if (!draggedItem) return;
+
+    // Now, handle the drop destination
+    // Case A: Dropping into a slot
+    if (destination.droppableId.startsWith('slot-')) {
         const slotIndex = parseInt(destination.droppableId.split('-')[1]);
         
-        // If there's an item in the slot, move it back to items list
-        if(newSlots[slotIndex]) {
-            newItems.push(newSlots[slotIndex] as Item);
+        // If the destination slot already has an item, move it back to the bank
+        const existingItem = newSlots[slotIndex];
+        if (existingItem) {
+            newItems.push(existingItem);
         }
-        newSlots[slotIndex] = movedItem;
-      } else {
-        // Dragged back to the items list, do nothing or re-insert
-        newItems.splice(source.index, 0, movedItem);
-      }
-    } else if (source.droppableId.startsWith('slot-')) {
-      const sourceSlotIndex = parseInt(source.droppableId.split('-')[1]);
-      const [movedItem] = newSlots.splice(sourceSlotIndex, 1, null);
 
-      if (movedItem) {
-        if (destination.droppableId === 'items') {
-          newItems.push(movedItem);
-        } else if (destination.droppableId.startsWith('slot-')) {
-          const destSlotIndex = parseInt(destination.droppableId.split('-')[1]);
-           // If there's an item in the destination slot, move it back to items list
-            if(newSlots[destSlotIndex]) {
-                newItems.push(newSlots[destSlotIndex] as Item);
-            }
-          newSlots[destSlotIndex] = movedItem;
-        }
-      }
+        newSlots[slotIndex] = draggedItem;
+    }
+    // Case B: Dropping back into the item bank
+    else if (destination.droppableId === 'items') {
+        newItems.splice(destination.index, 0, draggedItem);
     }
 
     setItems(newItems);
