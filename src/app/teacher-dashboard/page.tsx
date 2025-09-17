@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -51,7 +52,7 @@ import { useLanguage } from "@/contexts/language-context";
         weakestAreaTopic: { en: "Newton's 3rd Law", hi: "न्यूटन का तीसरा नियम", te: "న్యూటన్ 3వ నియమం" },
         weakestAreaDesc: { en: "45% average score on this topic", hi: "इस विषय पर 45% औसत स्कोर", te: "ఈ అంశంపై 45% సగటు స్కోరు" },
         classPerf: { en: "Class Performance Overview", hi: "कक्षा प्रदर्शन अवलोकन", te: "తరగతి పనితీరు అవలోకనం" },
-        classPerfDesc: { en: "Average score per mission for the whole class.", hi: "पूरी कक्षा के लिए प्रति मिशन औसत स्कोर।", te: "మొత్తం తరగతికి ప్రతి మిషన్‌కు సగటు స్కోరు." },
+        classPerfDesc: { en: "Average score per mission for the whole class.", hi: "पूरी कक्षा के लिए प्रति मिशन औसत स्कोर।", "te": "మొత్తం తరగతికి ప్రతి మిషన్‌కు సగటు స్కోరు." },
         studentProgress: { en: "Student Progress", hi: "छात्र प्रगति", te: "విద్యార్థి పురోగతి" },
         studentProgressDesc: { en: "Recent performance of students who might need help.", hi: "जिन छात्रों को मदद की आवश्यकता हो सकती है उनका हालिया प्रदर्शन।", te: "సహాయం అవసరమైన విద్యార్థుల ఇటీవలి పనితీరు." },
         student: { en: "Student", hi: "छात्र", te: "విద్యార్థి" },
