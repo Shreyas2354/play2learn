@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -115,7 +116,7 @@ export default function DashboardPage() {
     goalDescription: {
         en: "Complete Level 2 of the Physics mission on Energy.",
         hi: "ऊर्जा पर भौतिकी मिशन का स्तर 2 पूरा करें।",
-        te: "శక్తిపై ఫిజిక్స్ మిషన్ యొక్క స్థాయి 2 పూర్తి చేయండి.",
+        te: "శక్తిపై ఫిజిక్స్ మిషన్ యొక్క స్థాయి 2 పూర్తి చేయండి।",
     },
     leaderboard: {
         en: "Class Leaderboard",

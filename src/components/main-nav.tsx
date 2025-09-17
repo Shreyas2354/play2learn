@@ -10,7 +10,6 @@ import {
   FlaskConical,
   Users,
   BarChart3,
-  LogIn,
   LogOut,
 } from "lucide-react";
 import { getCurrentUser, logout } from "@/lib/users";
@@ -54,7 +53,6 @@ export function MainNav() {
       experiments: { en: "Experiments", hi: "प्रयोग", te: "ప్రయోగాలు" },
       multiplayer: { en: "Multiplayer", hi: "मल्टीप्लेयर", te: "మల్టీప్లేయర్" },
       teacherDashboard: { en: "Teacher Dashboard", hi: "शिक्षक डैशबोर्ड", te: "ఉపాధ్యాయ డాష్‌బోర్డ్" },
-      login: { en: "Login", hi: "लॉग इन करें", te: "లాగిన్" },
       logout: { en: "Logout", hi: "लॉग आउट", te: "లాగ్అవుట్" },
   }
 
@@ -67,11 +65,15 @@ export function MainNav() {
   ];
 
   const visibleNavItems = navItems.filter(item => user && item.role.includes(user.role));
+  
+  if (!user) {
+    return null; // Don't render anything if there's no user
+  }
 
   return (
     <nav className="p-2 flex flex-col h-full">
       <ul className="space-y-2 flex-grow">
-        {user ? visibleNavItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const isActive =
             item.href === "/"
               ? pathname === "/"
@@ -104,59 +106,32 @@ export function MainNav() {
               </Tooltip>
             </li>
           );
-        }) : (
-             <li>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                    <Link
-                        href="/login"
-                        className={cn(
-                        "flex items-center gap-3 rounded-md p-3 text-sm font-medium transition-colors group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:justify-center",
-                        pathname === "/login" ? "bg-primary text-primary-foreground" : "hover:bg-accent/50 hover:text-accent-foreground"
-                        )}
-                    >
-                        <LogIn className="h-5 w-5 shrink-0" />
-                        <span className="group-data-[collapsible=icon]:hidden">
-                            {t('login', navText)}
-                        </span>
-                    </Link>
-                    </TooltipTrigger>
-                    <TooltipContent
-                    side="right"
-                    className="hidden group-data-[collapsible=icon]:block"
-                    >
-                    {t('login', navText)}
-                    </TooltipContent>
-                </Tooltip>
-            </li>
-        )}
+        })}
       </ul>
-       {user && (
-        <div className="mt-auto">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={handleLogout}
-                variant="ghost"
-                className={cn(
-                  "flex items-center gap-3 rounded-md p-3 text-sm font-medium transition-colors group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:justify-center w-full justify-start hover:bg-destructive/80 hover:text-destructive-foreground"
-                )}
-              >
-                <LogOut className="h-5 w-5 shrink-0" />
-                <span className="group-data-[collapsible=icon]:hidden">
-                  {t('logout', navText)}
-                </span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="right"
-              className="hidden group-data-[collapsible=icon]:block"
+      <div className="mt-auto">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={handleLogout}
+              variant="ghost"
+              className={cn(
+                "flex items-center gap-3 rounded-md p-3 text-sm font-medium transition-colors group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:justify-center w-full justify-start hover:bg-destructive/80 hover:text-destructive-foreground"
+              )}
             >
-              {t('logout', navText)}
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      )}
+              <LogOut className="h-5 w-5 shrink-0" />
+              <span className="group-data-[collapsible=icon]:hidden">
+                {t('logout', navText)}
+              </span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent
+            side="right"
+            className="hidden group-data-[collapsible=icon]:block"
+          >
+            {t('logout', navText)}
+          </TooltipContent>
+        </Tooltip>
+      </div>
     </nav>
   );
 }

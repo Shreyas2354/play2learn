@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/language-context';
+import { Icons } from '@/components/icons';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function LoginPage() {
 
   const pageText = {
     title: { en: "Login", hi: "लॉग इन करें", te: "లాగిన్" },
-    description: { en: "Enter your credentials to access your account.", hi: "अपने खाते तक पहुँचने के लिए अपनी साख दर्ज करें।", te: "మీ ఖాతాను యాక్సెస్ చేయడానికి మీ ఆధారాలను నమోదు చేయండి." },
+    description: { en: "Enter your credentials to access your account.", hi: "अपने खाते तक पहुँचने के लिए अपनी साख दर्ज करें।", te: "మీ ఖాతాను యాక్సెస చేయడానికి మీ ఆధారాలను నమోదు చేయండి." },
     usernameLabel: { en: "Username", hi: "उपयोगकर्ता नाम", te: "వినియోగదారు పేరు" },
     passwordLabel: { en: "Password", hi: "पासवर्ड", te: "పాస్వర్డ్" },
     loginButton: { en: "Login", hi: "लॉग इन करें", te: "లాగిన్" },
@@ -67,50 +68,54 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">{t('title', pageText)}</CardTitle>
-          <CardDescription>
-            {t('description', pageText)}
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleLogin}>
-          <CardContent className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="username">{t('usernameLabel', pageText)}</Label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">{t('passwordLabel', pageText)}</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Logging in...' : t('loginButton', pageText)}
-            </Button>
-            <div className="mt-4 text-center text-sm">
-              {t('noAccount', pageText)}{' '}
-              <Link href="/signup" className="underline">
-                {t('signUp', pageText)}
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="flex items-center gap-2 font-headline font-bold text-3xl text-primary mb-4">
+            <Icons.logo className="h-10 w-10" />
+            <span>play2learn</span>
+        </div>
+        <Card className="w-full max-w-sm">
+            <CardHeader>
+            <CardTitle className="text-2xl">{t('title', pageText)}</CardTitle>
+            <CardDescription>
+                {t('description', pageText)}
+            </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleLogin}>
+            <CardContent className="grid gap-4">
+                <div className="grid gap-2">
+                <Label htmlFor="username">{t('usernameLabel', pageText)}</Label>
+                <Input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                </div>
+                <div className="grid gap-2">
+                <Label htmlFor="password">{t('passwordLabel', pageText)}</Label>
+                <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                </div>
+            </CardContent>
+            <CardFooter className="flex flex-col">
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : t('loginButton', pageText)}
+                </Button>
+                <div className="mt-4 text-center text-sm">
+                {t('noAccount', pageText)}{' '}
+                <Link href="/signup" className="underline">
+                    {t('signUp', pageText)}
+                </Link>
+                </div>
+            </CardFooter>
+            </form>
+        </Card>
     </div>
   );
 }

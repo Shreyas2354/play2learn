@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/language-context';
+import { Icons } from '@/components/icons';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -64,7 +65,11 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="flex items-center gap-2 font-headline font-bold text-3xl text-primary mb-4">
+            <Icons.logo className="h-10 w-10" />
+            <span>play2learn</span>
+        </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">{t('title', pageText)}</CardTitle>

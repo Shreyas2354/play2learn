@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { AppProviders } from '@/components/app-providers';
+import { LanguageProvider } from '@/contexts/language-context';
 
 export const metadata: Metadata = {
   title: 'play2learn: STEM Adventures',
@@ -29,9 +29,9 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('font-body antialiased')}>
-        <AppProviders>
+        <LanguageProvider>
           {children}
-        </AppProviders>
+        </LanguageProvider>
         <Toaster />
       </body>
     </html>
