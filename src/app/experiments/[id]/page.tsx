@@ -18,7 +18,7 @@ import { Check } from "lucide-react";
 
 export default function ExperimentPage() {
   const params = useParams();
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const experiment = experiments.find((exp) => exp.id === params.id);
 
   if (!experiment) {
@@ -58,7 +58,7 @@ export default function ExperimentPage() {
                 {experiment.ingredients.map((ingredient, index) => (
                     <li key={index} className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-primary" />
-                        <span>{ingredient[`name_${language}` as keyof typeof ingredient]}</span>
+                        <span>{t('name', ingredient)}</span>
                     </li>
                 ))}
             </ul>
