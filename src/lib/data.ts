@@ -1,17 +1,19 @@
 
 
+
 export type Question = {
   id: number;
   text: string;
   text_hi: string;
   text_te: string;
   options?: { id: string; text: string; text_hi: string; text_te: string; }[];
+  chainItems?: { id: string; text: string; text_hi: string; text_te: string; }[];
   correctAnswer: string;
   difficulty: 'easy' | 'medium' | 'hard';
   hints: string[];
   hints_hi: string[];
   hints_te: string[];
-  type?: 'mcq' | 'puzzle';
+  type?: 'mcq' | 'puzzle' | 'food-chain';
 };
 
 export type Mission = {
@@ -728,6 +730,41 @@ export const missions: Mission[] = [
         { id: 5, text: 'What is the process of a young animal changing form to become an adult called?', text_hi: 'एक युवा जानवर के वयस्क बनने के लिए रूप बदलने की प्रक्रिया को क्या कहा जाता है?', text_te: 'ఒక యువ జంతువు పెద్దదిగా మారడానికి రూపాంతరం చెందే ప్రక్రియను ఏమంటారు?', options: [{ id: 'a', text: 'Growing', text_hi: 'बढ़ना', text_te: 'పెరగడం' },{ id: 'b', text: 'Metamorphosis', text_hi: 'कायापलट', text_te: 'రూపాంతరం' },{ id: 'c', text: 'Aging', text_hi: 'उम्र बढ़ना', text_te: 'వృద్ధాప్యం' },{ id: 'd', text: 'Hatching', text_hi: 'अंडे से निकलना', text_te: 'పొదగడం' }], correctAnswer: 'b', difficulty: 'easy', hints: ['A caterpillar to a butterfly is an example.', 'A tadpole to a frog is another example.', 'It means "to change form".'], hints_hi: ['एक कैटरपिलर से तितली बनना इसका एक उदाहरण है।', 'एक टैडपोल से मेंढक बनना एक और उदाहरण है।', 'इसका अर्थ है "रूप बदलना"।'], hints_te: ['గొంగళి పురుగు నుండి సీతాకోకచిలుక ఒక ఉదాహరణ.', 'టాడ్పోల్ నుండి కప్ప మరొక ఉదాహరణ.', 'దీని అర్థం "రూపం మార్చడం".'] }
     ]
   },
+  {
+    id: 'biology-level-6',
+    subject: 'biology',
+    title: 'Level 6',
+    title_hi: 'स्तर 6',
+    title_te: 'స్థాయి 6',
+    description: 'Arrange the food chain in the correct order.',
+    description_hi: 'खाद्य श्रृंखला को सही क्रम में व्यवस्थित करें।',
+    description_te: 'ఆహార గొలుసును సరైన క్రమంలో అమర్చండి.',
+    badgeId: 'food-chain-champ',
+    badge_emoji: '🔗',
+    badge_color: 'bg-teal-400 text-teal-900',
+    questions: [
+        {
+            id: 1,
+            text: 'Arrange this food chain in the correct order, starting from the energy source.',
+            text_hi: 'इस खाद्य श्रृंखला को ऊर्जा स्रोत से शुरू करते हुए सही क्रम में व्यवस्थित करें।',
+            text_te: 'ఈ ఆహార గొలుసును శక్తి మూలం నుండి ప్రారంభించి సరైన క్రమంలో అమర్చండి.',
+            type: 'food-chain',
+            chainItems: [
+                { id: 'frog', text: 'Frog', text_hi: 'मेंढक', text_te: 'కప్ప' },
+                { id: 'grass', text: 'Grass', text_hi: 'घास', text_te: 'గడ్డి' },
+                { id: 'sun', text: 'Sun', text_hi: 'सूरज', text_te: 'సూర్యుడు' },
+                { id: 'eagle', text: 'Eagle', text_hi: 'चील', text_te: 'గద్ద' },
+                { id: 'grasshopper', text: 'Grasshopper', text_hi: 'टिड्डा', text_te: 'మిడత' },
+                { id: 'snake', text: 'Snake', text_hi: 'सांप', text_te: 'పాము' },
+            ],
+            correctAnswer: 'sun,grass,grasshopper,frog,snake,eagle',
+            difficulty: 'hard',
+            hints: ["Everything starts with energy from the sun.", "What eats grass?", "Think about what a frog eats, and what might eat a frog."],
+            hints_hi: ["सब कुछ सूर्य से ऊर्जा से शुरू होता है।", "घास कौन खाता है?", "सोचें कि मेंढक क्या खाता है, और मेंढक को क्या खा सकता है।"],
+            hints_te: ["ప్రతిదీ సూర్యుని నుండి వచ్చే శక్తితో మొదలవుతుంది.", "గడ్డిని ఎవరు తింటారు?", "కప్ప ఏమి తింటుంది, మరియు కప్పను ఏది తినగలదో ఆలోచించండి."]
+        }
+    ]
+  },
 
   // Mathematics Missions
   {
@@ -1359,5 +1396,6 @@ export const experiments: Experiment[] = [
 ];
 
     
+
 
 

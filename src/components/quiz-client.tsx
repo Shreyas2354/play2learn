@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Mission, Question } from "@/lib/data";
@@ -23,10 +24,13 @@ import {
   Loader2,
   Volume2,
   ArrowRight,
+  GripVertical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import type { DropResult } from 'react-beautiful-dnd';
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
@@ -97,10 +101,18 @@ export function QuizClient({ mission }: { mission: Mission }) {
   const [hintLevel, setHintLevel] = useState(1);
   const [isHintLoading, setIsHintLoading] = useState(false);
   const [puzzleAnswer, setPuzzleAnswer] = useState("");
+  const [foodChainOrder, setFoodChainOrder] = useState<any[]>([]);
 
   const questions = mission.questions;
   const currentQuestion: Question = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  useEffect(() => {
+    if (currentQuestion.type === 'food-chain' && currentQuestion.chainItems) {
+      // Shuffle the items for the puzzle
+      setFoodChainOrder([...currentQuestion.chainItems].sort(() => Math.random() - 0.5));
+    }
+  }, [currentQuestion]);
 
   useEffect(() => {
     const progressData = {
@@ -151,7 +163,13 @@ export function QuizClient({ mission }: { mission: Mission }) {
   };
   
   const handleSubmit = () => {
-    const answer = mission.subject === 'mathematics' ? puzzleAnswer : selectedAnswer;
+    let answer = selectedAnswer;
+    if (currentQuestion.type === 'puzzle') {
+        answer = puzzleAnswer;
+    } else if (currentQuestion.type === 'food-chain') {
+        answer = foodChainOrder.map(item => item.id).join(',');
+    }
+
     if (!answer) return;
     
     setShowFeedback(true);
@@ -180,7 +198,48 @@ export function QuizClient({ mission }: { mission: Mission }) {
     }
   };
 
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    const items = Array.from(foodChainOrder);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setFoodChainOrder(items);
+  };
+
   const renderQuizInterface = () => {
+    if (currentQuestion.type === 'food-chain') {
+      return (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="food-chain">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+                {foodChainOrder.map((item, index) => (
+                  <Draggable key={item.id} draggableId={item.id} index={index} isDragDisabled={showFeedback}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className={cn(
+                            "flex items-center p-4 rounded-lg border bg-card text-card-foreground shadow-sm",
+                            showFeedback && currentQuestion.correctAnswer.split(',')[index] === item.id && "bg-green-100 border-green-400",
+                            showFeedback && currentQuestion.correctAnswer.split(',')[index] !== item.id && "bg-red-100 border-red-400"
+                        )}
+                      >
+                        <GripVertical className="mr-2 text-muted-foreground" />
+                        <span>{t('text', item)}</span>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      );
+    }
+    
     if (mission.subject === 'chemistry' && currentQuestion.options) {
       return (
         <div className="flex justify-center items-center flex-wrap gap-8 min-h-[300px]">
@@ -203,7 +262,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
       );
     }
     
-    if (mission.subject === 'mathematics') {
+    if (currentQuestion.type === 'puzzle') {
         return (
           <div className="flex flex-col items-center justify-center gap-4 min-h-[150px] p-4">
              <Input 
@@ -302,10 +361,14 @@ export function QuizClient({ mission }: { mission: Mission }) {
             ) : (
               <Button
                 onClick={handleSubmit}
-                disabled={mission.subject === 'mathematics' ? !puzzleAnswer : !selectedAnswer}
+                disabled={
+                    (currentQuestion.type === 'mcq' && !selectedAnswer) ||
+                    (currentQuestion.type === 'puzzle' && !puzzleAnswer) ||
+                    (currentQuestion.type === 'food-chain' && foodChainOrder.length === 0)
+                }
                 className="bg-accent hover:bg-accent/90"
               >
-                {mission.subject === 'mathematics' ? 'Check Answer' : 'Submit Answer'}
+                {currentQuestion.type === 'puzzle' ? 'Check Answer' : 'Submit Answer'}
               </Button>
             )
           )}
