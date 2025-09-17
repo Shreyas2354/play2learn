@@ -231,17 +231,32 @@ export function QuizClient({ mission }: { mission: Mission }) {
       );
     }
     
-    if (currentQuestion.type === 'puzzle') {
+    if (mission.subject === 'mathematics' && (currentQuestion.type === 'puzzle' || currentQuestion.type === 'mcq') && currentQuestion.options) {
         return (
-          <div className="flex flex-col items-center justify-center gap-4 min-h-[150px] p-4">
-             <Input 
-                type="text"
-                value={puzzleAnswer}
-                onChange={(e) => setPuzzleAnswer(e.target.value)}
-                placeholder={t('enterAnswer', {en: 'Enter your answer', hi: 'अपना उत्तर दर्ज करें', te: 'మీ సమాధానం నమోదు చేయండి'})}
-                className="max-w-xs text-center text-2xl h-14 font-bold"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {currentQuestion.options?.map((option) => (
+              <Button
+                key={option.id}
+                variant="outline"
+                size="lg"
+                className={cn(
+                  "h-auto justify-center text-center whitespace-normal py-8 text-2xl font-bold",
+                  selectedAnswer === option.id &&
+                    "ring-2 ring-primary ring-offset-2",
+                  showFeedback &&
+                    option.id === currentQuestion.correctAnswer &&
+                    "bg-green-100 border-green-400 text-green-900",
+                  showFeedback &&
+                    selectedAnswer === option.id &&
+                    selectedAnswer !== currentQuestion.correctAnswer &&
+                    "bg-red-100 border-red-400 text-red-900"
+                )}
+                onClick={() => !showFeedback && setSelectedAnswer(option.id)}
                 disabled={showFeedback}
-             />
+              >
+                <span>{t('text', option)}</span>
+              </Button>
+            ))}
           </div>
         )
     }
