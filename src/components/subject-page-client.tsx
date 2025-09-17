@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Card,
@@ -19,9 +20,16 @@ import { useLanguage } from '@/contexts/language-context';
 
 export function SubjectPageClient({ subject, subjectMissions }: { subject: Subject, subjectMissions: Mission[] }) {
   const { t } = useLanguage();
-  
-  // In a real app, this would come from user progress state
-  const completedLevels = 6; 
+  const [completedMissions, setCompletedMissions] = useState<string[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const completedMissionsStr = localStorage.getItem('completedMissions');
+    if (completedMissionsStr) {
+      setCompletedMissions(JSON.parse(completedMissionsStr));
+    }
+  }, []);
 
   const pageText = {
     levels: {
@@ -61,6 +69,11 @@ export function SubjectPageClient({ subject, subjectMissions }: { subject: Subje
     }
   };
 
+  if (!isClient) {
+    // Render a loading state or nothing on the server to avoid hydration mismatch
+    return null;
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -76,7 +89,8 @@ export function SubjectPageClient({ subject, subjectMissions }: { subject: Subje
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {subjectMissions.map((mission, index) => {
             const level = index + 1;
-            const isLocked = level > completedLevels;
+            // Level 1 is always unlocked. Subsequent levels are unlocked if the previous one is completed.
+            const isLocked = index > 0 && !completedMissions.includes(subjectMissions[index - 1].id);
 
             return (
               <Card 
@@ -110,7 +124,7 @@ export function SubjectPageClient({ subject, subjectMissions }: { subject: Subje
                 </CardContent>
                 <CardFooter>
                   <Button asChild className="w-full" disabled={isLocked}>
-                    <Link href={`/missions/${mission.id}`}>
+                    <Link href={isLocked ? '#' : `/missions/${mission.id}`} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}>
                       {isLocked ? t('locked', pageText) : t('startLevel', pageText)}
                       {!isLocked && <ArrowRight className="ml-2 h-4 w-4" />}
                     </Link>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -13,7 +14,7 @@ import { useLanguage } from '@/contexts/language-context';
 export default function ResultsPage() {
   const params = useParams();
   const { t } = useLanguage();
-  const missionId = params.id;
+  const missionId = params.id as string;
   const mission = missions.find((m) => m.id === missionId);
 
   const [score, setScore] = useState(0);
@@ -27,6 +28,16 @@ export default function ResultsPage() {
     if (storedScore && storedTotal) {
       setScore(JSON.parse(storedScore));
       setTotal(JSON.parse(storedTotal));
+
+      // If the user passed, mark the mission as complete
+      if (JSON.parse(storedScore) > 0) {
+        const completedMissionsStr = localStorage.getItem('completedMissions');
+        const completedMissions = completedMissionsStr ? JSON.parse(completedMissionsStr) : [];
+        if (!completedMissions.includes(missionId)) {
+            completedMissions.push(missionId);
+            localStorage.setItem('completedMissions', JSON.stringify(completedMissions));
+        }
+      }
     }
   }, [missionId]);
 
