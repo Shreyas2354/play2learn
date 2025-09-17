@@ -3,8 +3,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import type { DropResult } from 'react-beautiful-dnd';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 import type { Question } from '@/lib/data';
@@ -35,7 +33,7 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
   const { t } = useLanguage();
   const [items, setItems] = useState<Item[]>([]);
   const [slots, setSlots] = useState<(Item | null)[]>([]);
-
+  
   useEffect(() => {
     if (question.chainItems) {
       const initialItems = [...question.chainItems].sort(() => Math.random() - 0.5).map((item, index) => ({
@@ -48,131 +46,123 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
     }
   }, [question, t]);
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination || showFeedback) return;
+  useEffect(() => {
+    const answer = slots.map(item => item?.id || '').join(',');
+    onPuzzleComplete(answer);
+  }, [slots, onPuzzleComplete]);
 
-    const { source, destination } = result;
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: Item, source: 'bank' | 'slot', index: number) => {
+    if (showFeedback) return e.preventDefault();
+    e.dataTransfer.setData('text/plain', JSON.stringify({ item, source, index }));
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetSlotIndex: number) => {
+    e.preventDefault();
+    if (showFeedback) return;
+
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const { item: draggedItem, source, index: sourceIndex } = data;
 
     let newItems = [...items];
     let newSlots = [...slots];
 
-    // Item being dragged
-    let draggedItem: Item | null = null;
+    const existingItemInTargetSlot = newSlots[targetSlotIndex];
 
-    // Case 1: Dragging from the item bank
-    if (source.droppableId === 'items') {
-        draggedItem = newItems[source.index];
-        newItems.splice(source.index, 1);
-    } 
-    // Case 2: Dragging from a slot
-    else if (source.droppableId.startsWith('slot-')) {
-        const slotIndex = parseInt(source.droppableId.split('-')[1]);
-        draggedItem = newSlots[slotIndex];
-        newSlots[slotIndex] = null;
+    if (source === 'bank') {
+      // Move from bank to slot
+      newSlots[targetSlotIndex] = draggedItem;
+      newItems.splice(sourceIndex, 1);
+      if (existingItemInTargetSlot) {
+        newItems.push(existingItemInTargetSlot);
+      }
+    } else { // source === 'slot'
+      const sourceSlotIndex = sourceIndex;
+      if (sourceSlotIndex === targetSlotIndex) return; // Dropped in the same slot
+
+      // Swap items between slots
+      newSlots[targetSlotIndex] = draggedItem;
+      newSlots[sourceSlotIndex] = existingItemInTargetSlot;
     }
-
-    if (!draggedItem) return;
-
-    // Now, handle the drop destination
-    // Case A: Dropping into a slot
-    if (destination.droppableId.startsWith('slot-')) {
-        const slotIndex = parseInt(destination.droppableId.split('-')[1]);
-        
-        // If the destination slot already has an item, move it back to the bank
-        const existingItem = newSlots[slotIndex];
-        if (existingItem) {
-            newItems.push(existingItem);
-        }
-
-        newSlots[slotIndex] = draggedItem;
-    }
-    // Case B: Dropping back into the item bank
-    else if (destination.droppableId === 'items') {
-        newItems.splice(destination.index, 0, draggedItem);
-    }
-
+    
     setItems(newItems);
     setSlots(newSlots);
-    onPuzzleComplete(newSlots.map(item => item?.id || '').join(','));
+  };
+  
+  const handleDropOnBank = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (showFeedback) return;
+    
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const { item: draggedItem, source, index: sourceIndex } = data;
+
+    if (source === 'slot') {
+      let newItems = [...items];
+      let newSlots = [...slots];
+      
+      newSlots[sourceIndex] = null; // Remove from slot
+      newItems.push(draggedItem); // Add back to bank
+      
+      setItems(newItems);
+      setSlots(newSlots);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
   const correctOrder = question.correctAnswer.split(',');
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
       <div className="space-y-6 flex flex-col items-center">
         {/* Drop Slots */}
         <div className="flex items-center justify-center flex-wrap gap-2">
             {slots.map((item, index) => (
-            <Droppable key={index} droppableId={`slot-${index}`} isDropDisabled={showFeedback}>
-                {(provided, snapshot) => (
-                <>
-                <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={cn(
-                        'w-24 h-24 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50 transition-colors',
-                        snapshot.isDraggingOver && 'bg-primary/20 border-primary',
-                        showFeedback && item && item.id === correctOrder[index] && 'border-green-500 bg-green-100',
-                        showFeedback && item && item.id !== correctOrder[index] && 'border-red-500 bg-red-100'
-                    )}
-                >
-                    {item ? (
-                    <Draggable draggableId={item.id} index={index} isDragDisabled={showFeedback}>
-                        {(provided) => (
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="p-2 text-center"
-                        >
-                            <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto rounded-md" />
-                            <span className="text-xs font-semibold">{item.text}</span>
-                        </div>
+                <div key={index} className="flex items-center gap-2">
+                    <div
+                        onDrop={(e) => handleDrop(e, index)}
+                        onDragOver={handleDragOver}
+                        className={cn(
+                            'w-24 h-24 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50 transition-colors',
+                            showFeedback && item && item.id === correctOrder[index] && 'border-green-500 bg-green-100',
+                            showFeedback && item && item.id !== correctOrder[index] && 'border-red-500 bg-red-100'
                         )}
-                    </Draggable>
-                    ) : (
-                    provided.placeholder
-                    )}
+                    >
+                        {item && (
+                           <div
+                              draggable={!showFeedback}
+                              onDragStart={(e) => handleDragStart(e, item, 'slot', index)}
+                              className="p-2 text-center cursor-grab"
+                            >
+                              <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto rounded-md" />
+                              <span className="text-xs font-semibold">{item.text}</span>
+                            </div>
+                        )}
+                    </div>
+                    {index < slots.length - 1 && <ArrowRight className="h-6 w-6 text-muted-foreground" />}
                 </div>
-                {index < slots.length - 1 && <ArrowRight className="h-6 w-6 text-muted-foreground" />}
-                </>
-                )}
-            </Droppable>
             ))}
         </div>
 
         {/* Draggable Items */}
-        <Droppable droppableId="items" direction="horizontal" isDropDisabled={showFeedback}>
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className={cn(
-                'mt-8 p-4 border rounded-lg bg-background min-h-[120px] w-full flex items-center justify-center flex-wrap gap-4',
-                snapshot.isDraggingOver && 'bg-secondary'
-              )}
-            >
+         <div
+            onDrop={handleDropOnBank}
+            onDragOver={handleDragOver}
+            className="mt-8 p-4 border rounded-lg bg-background min-h-[120px] w-full flex items-center justify-center flex-wrap gap-4"
+          >
               {items.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index} isDragDisabled={showFeedback}>
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="p-2 text-center bg-card shadow rounded-md"
-                    >
-                      <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto rounded-md" />
-                      <span className="text-xs font-semibold">{item.text}</span>
-                    </div>
-                  )}
-                </Draggable>
+                <div
+                  key={item.id}
+                  draggable={!showFeedback}
+                  onDragStart={(e) => handleDragStart(e, item, 'bank', index)}
+                  className="p-2 text-center bg-card shadow rounded-md cursor-grab"
+                >
+                  <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto rounded-md" />
+                  <span className="text-xs font-semibold">{item.text}</span>
+                </div>
               ))}
-              {provided.placeholder}
             </div>
-          )}
-        </Droppable>
       </div>
-    </DragDropContext>
   );
 }
