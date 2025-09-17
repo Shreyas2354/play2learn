@@ -32,6 +32,7 @@ import { Input } from "./ui/input";
 import { FoodChainPuzzle } from "./food-chain-puzzle";
 import { PicturePuzzle } from "./picture-puzzle";
 import { getHintAction } from "@/app/actions/get-hint";
+import { Balloon } from "./balloon";
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
@@ -167,34 +168,22 @@ export function QuizClient({ mission }: { mission: Mission }) {
         );
     }
     
-    if (mission.subject === 'mathematics' && (currentQuestion.type === 'puzzle' || currentQuestion.type === 'mcq') && currentQuestion.options) {
+    if (mission.subject === 'mathematics' && currentQuestion.type === 'mcq' && currentQuestion.options) {
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {currentQuestion.options?.map((option) => (
-              <Button
-                key={option.id}
-                variant="outline"
-                size="lg"
-                className={cn(
-                  "h-auto justify-center text-center whitespace-normal py-8 text-2xl font-bold",
-                  selectedAnswer === option.id &&
-                    "ring-2 ring-primary ring-offset-2",
-                  showFeedback &&
-                    option.id === currentQuestion.correctAnswer &&
-                    "bg-green-100 border-green-400 text-green-900",
-                  showFeedback &&
-                    selectedAnswer === option.id &&
-                    selectedAnswer !== currentQuestion.correctAnswer &&
-                    "bg-red-100 border-red-400 text-red-900"
-                )}
-                onClick={() => !showFeedback && setSelectedAnswer(option.id)}
-                disabled={showFeedback}
-              >
-                <span>{t('text', option)}</span>
-              </Button>
-            ))}
-          </div>
-        )
+            <div className="flex justify-center items-center gap-4 flex-wrap min-h-[250px]">
+              {currentQuestion.options?.map((option) => (
+                <Balloon
+                  key={option.id}
+                  option={option}
+                  onClick={(optionId) => !showFeedback && setSelectedAnswer(optionId)}
+                  disabled={showFeedback}
+                  isSelected={selectedAnswer === option.id}
+                  isCorrect={option.id === currentQuestion.correctAnswer}
+                  showFeedback={showFeedback}
+                />
+              ))}
+            </div>
+          );
     }
 
     // Default multiple-choice interface
