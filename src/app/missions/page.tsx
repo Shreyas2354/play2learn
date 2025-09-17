@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -7,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ArrowRight, Microscope, Atom, TestTube, Calculator } from 'lucide-react';
+import { ArrowRight, Microscope, Atom, TestTube, Calculator, BookText } from 'lucide-react';
 import { subjects } from '@/lib/data';
 import { useLanguage } from '@/contexts/language-context';
 
@@ -50,6 +51,7 @@ export default function MissionsPage() {
                       {subject.id === 'biology' && <Microscope className="h-6 w-6 text-white" />}
                       {subject.id === 'chemistry' && <TestTube className="h-6 w-6 text-white" />}
                       {subject.id === 'mathematics' && <Calculator className="h-6 w-6 text-white" />}
+                      {subject.id === 'english' && <BookText className="h-6 w-6 text-white" />}
                     </div>
                     <div>
                       <CardTitle className="font-headline">{t('title', subject)}</CardTitle>
