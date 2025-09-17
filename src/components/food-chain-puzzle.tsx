@@ -22,6 +22,15 @@ type FoodChainPuzzleProps = {
   onPuzzleComplete: (answer: string) => void;
 };
 
+const imageSeeds: { [key: string]: string } = {
+    sun: 'sunSeed',
+    grass: 'grassSeed',
+    grasshopper: 'insectSeed',
+    frog: 'frogSeed',
+    snake: 'snakeSeed',
+    eagle: 'eagleSeed',
+};
+
 export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: FoodChainPuzzleProps) {
   const { t } = useLanguage();
   const [items, setItems] = useState<Item[]>([]);
@@ -29,10 +38,10 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
 
   useEffect(() => {
     if (question.chainItems) {
-      const initialItems = [...question.chainItems].sort(() => Math.random() - 0.5).map(item => ({
+      const initialItems = [...question.chainItems].sort(() => Math.random() - 0.5).map((item, index) => ({
         ...item,
         text: t('text', item),
-        imageUrl: `/images/${item.id}.png`
+        imageUrl: `https://picsum.photos/seed/${imageSeeds[item.id] || index}/64/64`
       }));
       setItems(initialItems);
       setSlots(new Array(question.chainItems.length).fill(null));
@@ -117,7 +126,7 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
                             {...provided.dragHandleProps}
                             className="p-2 text-center"
                         >
-                            <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto" />
+                            <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto rounded-md" />
                             <span className="text-xs font-semibold">{item.text}</span>
                         </div>
                         )}
@@ -153,7 +162,7 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
                       {...provided.dragHandleProps}
                       className="p-2 text-center bg-card shadow rounded-md"
                     >
-                      <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto" />
+                      <Image src={item.imageUrl} alt={item.text} width={64} height={64} className="mx-auto rounded-md" />
                       <span className="text-xs font-semibold">{item.text}</span>
                     </div>
                   )}
