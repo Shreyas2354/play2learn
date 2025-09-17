@@ -3,6 +3,7 @@
 
 
 
+
 export type Question = {
   id: number;
   text: string;
@@ -15,7 +16,9 @@ export type Question = {
   hints: string[];
   hints_hi: string[];
   hints_te: string[];
-  type?: 'mcq' | 'puzzle' | 'food-chain' | 'food-chain-visual';
+  type?: 'mcq' | 'puzzle' | 'food-chain' | 'food-chain-visual' | 'picture-puzzle';
+  imageUrl?: string;
+  imageHint?: string;
 };
 
 export type Mission = {
@@ -797,8 +800,14 @@ export const missions: Mission[] = [
         text: 'What is 5 multiplied by 8?',
         text_hi: '5 को 8 से गुणा करने पर क्या मिलता है?',
         text_te: '5 ను 8 తో గుణిస్తే ఎంత?',
-        type: 'puzzle',
-        correctAnswer: '40',
+        type: 'mcq',
+        options: [
+            { id: 'a', text: '35', text_hi: '35', text_te: '35' },
+            { id: 'b', text: '40', text_hi: '40', text_te: '40' },
+            { id: 'c', text: '45', text_hi: '45', text_te: '45' },
+            { id: 'd', text: '50', text_hi: '50', text_te: '50' },
+        ],
+        correctAnswer: 'b',
         difficulty: 'easy',
         hints: [
             "Think of counting by 5, eight times.",
@@ -821,8 +830,14 @@ export const missions: Mission[] = [
         text: 'If you have 12 apples and you give away 5, how many do you have left?',
         text_hi: 'यदि आपके पास 12 सेब हैं और आप 5 दे देते हैं, तो आपके पास कितने बचते हैं?',
         text_te: 'మీ దగ్గర 12 ఆపిల్స్ ఉంటే మరియు మీరు 5 ఇచ్చేస్తే, మీ దగ్గర ఎన్ని మిగులుతాయి?',
-        type: 'puzzle',
-        correctAnswer: '7',
+        type: 'mcq',
+        options: [
+            { id: 'a', text: '6', text_hi: '6', text_te: '6' },
+            { id: 'b', text: '7', text_hi: '7', text_te: '7' },
+            { id: 'c', text: '8', text_hi: '8', text_te: '8' },
+            { id: 'd', text: '9', text_hi: '9', text_te: '9' },
+        ],
+        correctAnswer: 'b',
         difficulty: 'easy',
         hints: [
             "This is a subtraction problem.",
@@ -845,8 +860,14 @@ export const missions: Mission[] = [
         text: 'What is the next number in the sequence: 2, 4, 6, 8, ...?',
         text_hi: 'इस क्रम में अगली संख्या क्या है: 2, 4, 6, 8, ...?',
         text_te: 'ఈ క్రమంలో తదుపరి సంఖ్య ఏది: 2, 4, 6, 8, ...?',
-        type: 'puzzle',
-        correctAnswer: '10',
+        type: 'mcq',
+        options: [
+            { id: 'a', text: '9', text_hi: '9', text_te: '9' },
+            { id: 'b', text: '10', text_hi: '10', text_te: '10' },
+            { id: 'c', text: '11', text_hi: '11', text_te: '11' },
+            { id: 'd', text: '12', text_hi: '12', text_te: '12' },
+        ],
+        correctAnswer: 'b',
         difficulty: 'easy',
         hints: [
             "The numbers are increasing by the same amount each time.",
@@ -869,8 +890,14 @@ export const missions: Mission[] = [
         text: 'How many sides does a triangle have?',
         text_hi: 'एक त्रिभुज में कितनी भुजाएँ होती हैं?',
         text_te: 'ఒక త్రిభుజానికి ఎన్ని భుజాలు ఉంటాయి?',
-        type: 'puzzle',
-        correctAnswer: '3',
+        type: 'mcq',
+         options: [
+            { id: 'a', text: '3', text_hi: '3', text_te: '3' },
+            { id: 'b', text: '4', text_hi: '4', text_te: '4' },
+            { id: 'c', text: '5', text_hi: '5', text_te: '5' },
+            { id: 'd', text: '6', text_hi: '6', text_te: '6' },
+        ],
+        correctAnswer: 'a',
         difficulty: 'easy',
         hints: [
             "The name 'triangle' has a clue in it.",
@@ -893,8 +920,14 @@ export const missions: Mission[] = [
         text: 'What is 100 divided by 10?',
         text_hi: '100 को 10 से विभाजित करने पर क्या मिलता है?',
         text_te: '100 ను 10 తో భాగిస్తే ఎంత?',
-        type: 'puzzle',
-        correctAnswer: '10',
+        type: 'mcq',
+        options: [
+            { id: 'a', text: '1', text_hi: '1', text_te: '1' },
+            { id: 'b', text: '10', text_hi: '10', text_te: '10' },
+            { id: 'c', text: '20', text_hi: '20', text_te: '20' },
+            { id: 'd', text: '100', text_hi: '100', text_te: '100' },
+        ],
+        correctAnswer: 'b',
         difficulty: 'easy',
         hints: [
             "How many times does 10 go into 100?",
@@ -1047,6 +1080,35 @@ export const missions: Mission[] = [
         { id: 3, text: 'A bottle holds 1 liter of water. How many milliliters is that?', text_hi: 'एक बोतल में 1 लीटर पानी आता है। यह कितने मिलीलीटर है?', text_te: 'ఒక సీసాలో 1 లీటర్ నీరు పడుతుంది। అది ఎన్ని మిల్లీలీటర్లు?', type: 'puzzle', correctAnswer: '1000', difficulty: 'easy', hints: ['"Milli" means one-thousandth.', 'A large bottle of soda is often 1 or 2 liters.', 'It measures volume.'], hints_hi: ['"मिली" का अर्थ है एक-हजारवां।', 'सोडा की एक बड़ी बोतल अक्सर 1 या 2 लीटर की होती है।', 'यह आयतन मापता है।'], hints_te: ['"మిల్లీ" అంటే వెయ్యవ వంతు.', 'ఒక పెద్ద సోడా బాటిల్ తరచుగా 1 లేదా 2 లీటర్లు ఉంటుంది.', 'ఇది ఘనపరిమాణాన్ని కొలుస్తుంది.'] },
         { id: 4, text: 'If you have a rope that is 2 meters long, how many centimeters long is it?', text_hi: 'यदि आपके पास 2 मीटर लंबी रस्सी है, तो वह कितने सेंटीमीटर लंबी है?', text_te: 'మీ దగ్గర 2 మీటర్ల పొడవైన తాడు ఉంటే, అది ఎన్ని సెంటీమీటర్ల పొడవు ఉంటుంది?', type: 'puzzle', correctAnswer: '200', difficulty: 'easy', hints: ['There are 100 centimeters in a meter.', 'Multiply the number of meters by 100.', '2 x 100 = ?'], hints_hi: ['एक मीटर में 100 सेंटीमीटर होते हैं।', 'मीटर की संख्या को 100 से गुणा करें।', '2 x 100 = ?'], hints_te: ['ఒక మీటర్‌లో 100 సెంటీమీటర్లు ఉంటాయి.', 'మీటర్ల సంఖ్యను 100 తో గుణించండి.', '2 x 100 = ?'] },
         { id: 5, text: 'The distance to the next village is 5 kilometers. How many meters is that?', text_hi: 'अगले गाँव की दूरी 5 किलोमीटर है। यह कितने मीटर है?', text_te: 'తదుపరి గ్రామానికి దూరం 5 కిలోమీటర్లు। అది ఎన్ని మీటర్లు?', type: 'puzzle', correctAnswer: '5000', difficulty: 'easy', hints: ['There are 1000 meters in a kilometer.', '"Kilo" means one thousand.', '5 x 1000 = ?'], hints_hi: ['एक किलोमीटर में 1000 मीटर होते हैं।', '"किलो" का अर्थ है एक हजार।', '5 x 1000 = ?'], hints_te: ['ఒక కిలోమీటర్‌లో 1000 మీటర్లు ఉంటాయి.', '"కిలో" అంటే వెయ్యి.', '5 x 1000 = ?'] }
+    ]
+  },
+  {
+    id: 'mathematics-level-6',
+    subject: 'mathematics',
+    title: 'Level 6',
+    title_hi: 'स्तर 6',
+    title_te: 'స్థాయి 6',
+    description: 'Solve the picture puzzle.',
+    description_hi: 'चित्र पहेली को हल करें।',
+    description_te: 'చిత్ర పజిల్‌ను పరిష్కరించండి.',
+    badgeId: 'puzzle-pro',
+    badge_emoji: '🧩',
+    badge_color: 'bg-cyan-400 text-cyan-900',
+    questions: [
+        {
+            id: 1,
+            text: 'Based on the image, what is the value of the final equation?',
+            text_hi: 'चित्र के आधार पर, अंतिम समीकरण का मान क्या है?',
+            text_te: 'చిత్రం ఆధారంగా, చివరి సమీకరణం విలువ ఏమిటి?',
+            type: 'picture-puzzle',
+            imageUrl: 'https://picsum.photos/seed/mathPuzzle1/400/300',
+            imageHint: 'math puzzle',
+            correctAnswer: '15',
+            difficulty: 'medium',
+            hints: ["First, figure out the value of one apple.", "Three apples equal 30. So one apple is?", "If an apple is 10, and apple + bananas + bananas = 18, what is the value of a banana bunch?"],
+            hints_hi: ["पहले, एक सेब का मूल्य निकालें।", "तीन सेब 30 के बराबर हैं। तो एक सेब का मूल्य क्या है?", "यदि एक सेब 10 है, और सेब + केले + केले = 18, तो एक केले के गुच्छे का मूल्य क्या है?"],
+            hints_te: ["మొదట, ఒక ఆపిల్ విలువను కనుగొనండి.", "మూడు ఆపిల్స్ 30కి సమానం. కాబట్టి ఒక ఆపిల్ విలువ ఎంత?", "ఒకవేళ ఆపిల్ 10 అయితే, మరియు ఆపిల్ + అరటిపండ్లు + అరటిపండ్లు = 18 అయితే, ఒక అరటిపండు గుత్తి విలువ ఎంత?"]
+        }
     ]
   },
 
@@ -1509,6 +1571,7 @@ export const experiments: Experiment[] = [
 ];
 
     
+
 
 
 

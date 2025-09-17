@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { FoodChainPuzzle } from "./food-chain-puzzle";
+import { PicturePuzzle } from "./picture-puzzle";
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
@@ -100,7 +101,6 @@ export function QuizClient({ mission }: { mission: Mission }) {
   const [hintLevel, setHintLevel] = useState(1);
   const [isHintLoading, setIsHintLoading] = useState(false);
   const [puzzleAnswer, setPuzzleAnswer] = useState("");
-  const [visualPuzzleAnswer, setVisualPuzzleAnswer] = useState<string>("");
 
   const questions = mission.questions;
   const currentQuestion: Question = questions[currentQuestionIndex];
@@ -122,7 +122,6 @@ export function QuizClient({ mission }: { mission: Mission }) {
     setHint(null);
     setHintLevel(1);
     setPuzzleAnswer("");
-    setVisualPuzzleAnswer("");
   }, [currentQuestionIndex]);
 
   const handleTextToSpeech = () => {
@@ -157,10 +156,8 @@ export function QuizClient({ mission }: { mission: Mission }) {
   
   const handleSubmit = () => {
     let answer = selectedAnswer;
-    if (currentQuestion.type === 'puzzle') {
+    if (currentQuestion.type === 'puzzle' || currentQuestion.type === 'food-chain-visual' || currentQuestion.type === 'picture-puzzle') {
         answer = puzzleAnswer;
-    } else if (currentQuestion.type === 'food-chain-visual') {
-        answer = visualPuzzleAnswer;
     }
 
     if (!answer) return;
@@ -197,7 +194,17 @@ export function QuizClient({ mission }: { mission: Mission }) {
             <FoodChainPuzzle
                 question={currentQuestion}
                 showFeedback={showFeedback}
-                onPuzzleComplete={setVisualPuzzleAnswer}
+                onPuzzleComplete={setPuzzleAnswer}
+            />
+        );
+    }
+
+    if (currentQuestion.type === 'picture-puzzle') {
+        return (
+            <PicturePuzzle
+                question={currentQuestion}
+                showFeedback={showFeedback}
+                onAnswerChange={setPuzzleAnswer}
             />
         );
     }
@@ -325,8 +332,8 @@ export function QuizClient({ mission }: { mission: Mission }) {
                 onClick={handleSubmit}
                 disabled={
                     (currentQuestion.type === 'mcq' && !selectedAnswer) ||
-                    (currentQuestion.type === 'puzzle' && !puzzleAnswer) ||
-                    (currentQuestion.type === 'food-chain-visual' && visualPuzzleAnswer.split(',').some(p => p === ''))
+                    ((currentQuestion.type === 'puzzle' || currentQuestion.type === 'picture-puzzle') && !puzzleAnswer) ||
+                    (currentQuestion.type === 'food-chain-visual' && puzzleAnswer.split(',').some(p => p === ''))
                 }
                 className="bg-accent hover:bg-accent/90"
               >
