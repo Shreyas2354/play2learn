@@ -31,6 +31,7 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { FoodChainPuzzle } from "./food-chain-puzzle";
 import { PicturePuzzle } from "./picture-puzzle";
+import { getHintAction } from "@/app/actions/get-hint";
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
@@ -146,18 +147,30 @@ export function QuizClient({ mission }: { mission: Mission }) {
     }
   };
 
-  const handleGetHint = () => {
-    const hints = language === 'hi' ? currentQuestion.hints_hi : language === 'te' ? currentQuestion.hints_te : currentQuestion.hints;
-    if (hintLevel <= hints.length) {
-      setHint(hints[hintLevel - 1]);
-      setHintLevel(prev => prev + 1);
+  const handleGetHint = async () => {
+    setIsHintLoading(true);
+    setHint(null);
+
+    const studentPerformance = `The student has attempted this question ${hintLevel -1} times. Last answer was '${selectedAnswer || puzzleAnswer}'.`;
+    
+    const response = await getHintAction({
+      question: t('text', currentQuestion),
+      studentPerformance,
+      hintLevel,
+    });
+    
+    if (response.error) {
+        toast({
+            title: "Error getting hint",
+            description: response.error,
+            variant: "destructive",
+        });
     } else {
-      setHint(hints[hints.length - 1]);
-      toast({
-        title: "No more hints!",
-        description: "You've seen all the available hints for this question.",
-      });
+        setHint(response.hint || null);
+        setHintLevel(prev => prev + 1);
     }
+    
+    setIsHintLoading(false);
   };
   
   const handleSubmit = () => {
