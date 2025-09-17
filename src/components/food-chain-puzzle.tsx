@@ -95,7 +95,7 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
         {/* Drop Slots */}
         <div className="flex items-center justify-center flex-wrap gap-2">
             {slots.map((item, index) => (
-            <Droppable key={index} droppableId={`slot-${index}`}>
+            <Droppable key={index} droppableId={`slot-${index}`} isDropDisabled={showFeedback}>
                 {(provided, snapshot) => (
                 <>
                 <div
@@ -134,7 +134,7 @@ export function FoodChainPuzzle({ question, showFeedback, onPuzzleComplete }: Fo
         </div>
 
         {/* Draggable Items */}
-        <Droppable droppableId="items" direction="horizontal">
+        <Droppable droppableId="items" direction="horizontal" isDropDisabled={showFeedback}>
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
