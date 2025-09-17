@@ -1,6 +1,7 @@
 
 
 
+
 export type Question = {
   id: number;
   text: string;
@@ -13,7 +14,7 @@ export type Question = {
   hints: string[];
   hints_hi: string[];
   hints_te: string[];
-  type?: 'mcq' | 'puzzle' | 'food-chain';
+  type?: 'mcq' | 'puzzle' | 'food-chain' | 'food-chain-visual';
 };
 
 export type Mission = {
@@ -748,7 +749,7 @@ export const missions: Mission[] = [
             text: 'Arrange this food chain in the correct order, starting from the energy source.',
             text_hi: 'इस खाद्य श्रृंखला को ऊर्जा स्रोत से शुरू करते हुए सही क्रम में व्यवस्थित करें।',
             text_te: 'ఈ ఆహార గొలుసును శక్తి మూలం నుండి ప్రారంభించి సరైన క్రమంలో అమర్చండి.',
-            type: 'food-chain',
+            type: 'food-chain-visual',
             chainItems: [
                 { id: 'frog', text: 'Frog', text_hi: 'मेंढक', text_te: 'కప్ప' },
                 { id: 'grass', text: 'Grass', text_hi: 'घास', text_te: 'గడ్డి' },
@@ -1396,6 +1397,7 @@ export const experiments: Experiment[] = [
 ];
 
     
+
 
 
 

@@ -31,6 +31,7 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import type { DropResult } from 'react-beautiful-dnd';
+import { FoodChainPuzzle } from "./food-chain-puzzle";
 
 type AnswerState = "correct" | "incorrect" | "unanswered";
 
@@ -102,6 +103,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
   const [isHintLoading, setIsHintLoading] = useState(false);
   const [puzzleAnswer, setPuzzleAnswer] = useState("");
   const [foodChainOrder, setFoodChainOrder] = useState<any[]>([]);
+  const [visualPuzzleAnswer, setVisualPuzzleAnswer] = useState<string>("");
 
   const questions = mission.questions;
   const currentQuestion: Question = questions[currentQuestionIndex];
@@ -130,6 +132,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
     setHint(null);
     setHintLevel(1);
     setPuzzleAnswer("");
+    setVisualPuzzleAnswer("");
   }, [currentQuestionIndex]);
 
   const handleTextToSpeech = () => {
@@ -168,6 +171,8 @@ export function QuizClient({ mission }: { mission: Mission }) {
         answer = puzzleAnswer;
     } else if (currentQuestion.type === 'food-chain') {
         answer = foodChainOrder.map(item => item.id).join(',');
+    } else if (currentQuestion.type === 'food-chain-visual') {
+        answer = visualPuzzleAnswer;
     }
 
     if (!answer) return;
@@ -207,6 +212,16 @@ export function QuizClient({ mission }: { mission: Mission }) {
   };
 
   const renderQuizInterface = () => {
+    if (currentQuestion.type === 'food-chain-visual') {
+        return (
+            <FoodChainPuzzle
+                question={currentQuestion}
+                showFeedback={showFeedback}
+                onPuzzleComplete={setVisualPuzzleAnswer}
+            />
+        );
+    }
+
     if (currentQuestion.type === 'food-chain') {
       return (
         <DragDropContext onDragEnd={onDragEnd}>
@@ -364,7 +379,8 @@ export function QuizClient({ mission }: { mission: Mission }) {
                 disabled={
                     (currentQuestion.type === 'mcq' && !selectedAnswer) ||
                     (currentQuestion.type === 'puzzle' && !puzzleAnswer) ||
-                    (currentQuestion.type === 'food-chain' && foodChainOrder.length === 0)
+                    (currentQuestion.type === 'food-chain' && foodChainOrder.length === 0) ||
+                    (currentQuestion.type === 'food-chain-visual' && visualPuzzleAnswer.split(',').some(p => p === ''))
                 }
                 className="bg-accent hover:bg-accent/90"
               >
