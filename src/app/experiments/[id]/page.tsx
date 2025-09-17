@@ -1,3 +1,4 @@
+
 "use client";
 
 import { notFound, useParams } from "next/navigation";
@@ -10,13 +11,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/language-context";
+import { Check } from "lucide-react";
 
 export default function ExperimentPage() {
   const params = useParams();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const experiment = experiments.find((exp) => exp.id === params.id);
 
   if (!experiment) {
@@ -28,6 +30,11 @@ export default function ExperimentPage() {
           en: "Step",
           hi: "चरण",
           te: "దశ",
+      },
+      ingredientsTitle: {
+          en: "What You'll Need",
+          hi: "आपको क्या चाहिए होगा",
+          te: "మీకు ఏమి కావాలి",
       }
   }
 
@@ -41,6 +48,22 @@ export default function ExperimentPage() {
           {t('description', experiment)}
         </p>
       </div>
+
+      <Card>
+        <CardHeader>
+            <CardTitle>{t('ingredientsTitle', pageText)}</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                {experiment.ingredients.map((ingredient, index) => (
+                    <li key={index} className="flex items-center gap-2">
+                        <Check className="h-4 w-4 text-primary" />
+                        <span>{ingredient[`name_${language}` as keyof typeof ingredient]}</span>
+                    </li>
+                ))}
+            </ul>
+        </CardContent>
+      </Card>
       
       <Carousel className="w-full">
         <CarouselContent>

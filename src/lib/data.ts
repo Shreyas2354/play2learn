@@ -682,7 +682,7 @@ export const missions: Mission[] = [
     badge_color: 'bg-gray-400 text-gray-900',
     questions: [
         { id: 1, text: 'Which animal is the king of the jungle?', text_hi: 'जंगल का राजा कौन सा जानवर है?', text_te: 'అడవికి రాజు ఏ జంతువు?', options: [{ id: 'a', text: 'Tiger', text_hi: 'बाघ', text_te: 'పులి' },{ id: 'b', text: 'Elephant', text_hi: 'हाथी', text_te: 'ఏనుగు' },{ id: 'c', text: 'Lion', text_hi: 'शेर', text_te: 'సింహం' },{ id: 'd', text: 'Bear', text_hi: 'भालू', text_te: 'ఎలుగుబంటి' }], correctAnswer: 'c', difficulty: 'easy', hints: ['It has a large mane.', 'It roars loudly.', 'It lives in a pride.'], hints_hi: ['इसकी एक बड़ी अयाल होती है।', 'यह जोर से दहाड़ता है।', 'यह एक झुंड में रहता है।'], hints_te: ['దానికి పెద్ద జూలు ఉంటుంది.', 'అది గట్టిగా గర్జిస్తుంది.', 'అది గుంపులో నివసిస్తుంది.'] },
-        { id: 2, text: 'Which of these animals can fly?', text_hi: 'इनमें से कौन सा जानवर उड़ सकता है?', text_te: 'ఈ జంతువులలో ఏది ఎగరగలదు?', options: [{ id: 'a', text: 'Penguin', text_hi: 'पेंगुइन', text_te: 'పెంగ్విన్' },{ id: 'b', text: 'Ostrich', text_hi: 'शुतुरमुर्ग', text_te: 'ఉష్ట్రపక్షి' },{ id: 'c', text: 'Bat', text_hi: 'चमगादड़', text_te: 'గబ్బిలం' },{ id: 'd', text: 'Chicken', text_hi: 'मुर्गी', text_te: 'కోడి' }], correctAnswer: 'c', difficulty: 'easy', hints: ['It is a mammal.', 'It is nocturnal.', 'It uses echolocation.'], hints_hi: ['यह एक स्तनपायी है।', 'यह निशाचर है।', 'यह इकोलोकेशन का उपयोग करता है।'], hints_te: ['ఇది ఒక క్షీరదం.', 'ఇది నిశాచరమైనది.', 'ఇది ఎకోలోకేషన్‌ను ఉపయోగిస్తుంది.'] },
+        { id: 2, text: 'Which of these animals can fly?', text_hi: 'इनमें से कौन सा जानवर उड़ सकता है?', text_te: 'ఈ జంతువులలో ఏది ఎగరగలదు?', options: [{ id: 'a', text: 'Penguin', text_hi: 'पेंगुइन', text_te: 'పెంగ్విన్' },{ id: 'b', text: 'Ostrich', text_hi: 'शुतुरमुर्ग', text_te: 'ఉష్ట్రపక్షి' },{ id: 'c', text: 'Bat', text_hi: 'चमगादड़', text_te: 'గబ్బిలం' },{ id: 'd', text: 'Chicken', text_hi: 'मुर्गी', text_te: 'కోడి' }], correctAnswer: 'c', difficulty: 'easy', hints: ['It is a mammal.', 'It is nocturnal.', 'It uses echolocation.'], hints_hi: ['यह एक स्तनपायी है।', 'यह निशाचर है।', 'यह इकोलोకేషన్‌ను ఉపయోగిస్తుంది।'], hints_te: ['ఇది ఒక క్షీరదం.', 'ఇది నిశాచరమైనది.', 'ఇది ఎకోలోకేషన్‌ను ఉపయోగిస్తుంది.'] },
         { id: 3, text: 'What is a baby dog called?', text_hi: 'कुत्ते के बच्चे को क्या कहते हैं?', text_te: 'కుక్క పిల్లను ఏమంటారు?', options: [{ id: 'a', text: 'Kitten', text_hi: 'बिल्ली का बच्चा', text_te: 'పిల్లి పిల్ల' },{ id: 'b', text: 'Puppy', text_hi: 'पिल्ला', text_te: 'కుక్క పిల్ల' },{ id: 'c', text: 'Calf', text_hi: 'बछड़ा', text_te: 'దూడ' },{ id: 'd', text: 'Cub', text_hi: 'शावक', text_te: 'పిల్ల' }], correctAnswer: 'b', difficulty: 'easy', hints: ['It is very playful.', 'It barks.', 'It grows up to be a dog.'], hints_hi: ['यह बहुत चंचल होता है।', 'यह भौंकता है।', 'यह बड़ा होकर कुत्ता बनता है।'], hints_te: ['ఇది చాలా సరదాగా ఉంటుంది.', 'ఇది మొరుగుతుంది.', 'ఇది పెరిగి కుక్క అవుతుంది.'] },
         { id: 4, text: 'Which animal is known for changing its color?', text_hi: 'कौन सा जानवर अपना रंग बदलने के लिए जाना जाता है?', text_te: 'ఏ జంతువు తన రంగును మార్చడానికి ప్రసిద్ధి చెందింది?', options: [{ id: 'a', text: 'Frog', text_hi: 'मेंढक', text_te: 'కప్ప' },{ id: 'b', text: 'Chameleon', text_hi: 'गिरगिट', text_te: 'ఊసరవెల్లి' },{ id: 'c', text: 'Snake', text_hi: 'सांप', text_te: 'పాము' },{ id: 'd', text: 'Lizard', text_hi: 'छिपकली', text_te: 'బల్లి' }], correctAnswer: 'b', difficulty: 'easy', hints: ['It helps them blend in.', 'They have long tongues.', 'It is a type of lizard.'], hints_hi: ['यह उन्हें घुलने-मिलने में मदद करता है।', 'उनकी जीभ लंबी होती है।', 'यह एक प्रकार की छिपकली है।'], hints_te: ['ఇది వారికి కలిసిపోవడానికి సహాయపడుతుంది.', 'వాటికి పొడవైన నాలుకలు ఉంటాయి.', 'ఇది ఒక రకమైన బల్లి.'] },
         { id: 5, text: 'What do you call an animal that only eats plants?', text_hi: 'जो जानवर केवल पौधे खाता है उसे आप क्या कहते हैं?', text_te: 'మొక్కలను మాత్రమే తినే జంతువును ఏమంటారు?', options: [{ id: 'a', text: 'Carnivore', text_hi: 'मांसाहारी', text_te: 'మాంసాహారి' },{ id: 'b', text: 'Omnivore', text_hi: 'सर्वाहारी', text_te: 'సర్వభక్షకి' },{ id: 'c', text: 'Herbivore', text_hi: 'शाकाहारी', text_te: 'శాఖాహారి' },{ id: 'd', text: 'Insectivore', text_hi: 'कीटभक्षी', text_te: 'కీటకాహారి' }], correctAnswer: 'c', difficulty: 'easy', hints: ['Cows and deer are examples.', '"Herb" means plant.', 'They do not eat meat.'], hints_hi: ['गाय और हिरण इसके उदाहरण हैं।', '"हर्ब" शब्द का अर्थ है पौधा।', 'वे मांस नहीं खाते हैं।'], hints_te: ['ఆవులు మరియు జింకలు ఉదాహరణలు.', '"హెర్బ్" అనే పదానికి మొక్క అని అర్థం.', 'అవి మాంసం తినవు.'] }
@@ -1264,6 +1264,12 @@ export const missions: Mission[] = [
   }
 ];
 
+export type Ingredient = {
+    name_en: string;
+    name_hi: string;
+    name_te: string;
+}
+
 export type Experiment = {
   id: string;
   title: string;
@@ -1274,6 +1280,7 @@ export type Experiment = {
   description_te: string;
   imageUrl: string;
   imageHint: string;
+  ingredients: Ingredient[];
   steps: {
     title: string;
     title_hi: string;
@@ -1297,6 +1304,15 @@ export const experiments: Experiment[] = [
         description_te: 'ఒక రసాయన ప్రతిచర్యను ప్రదర్శించడానికి ఒక క్లాసిక్ మరియు సురక్షితమైన ప్రయోగం.',
         imageUrl: 'https://picsum.photos/seed/exp1/600/400',
         imageHint: 'DIY volcano',
+        ingredients: [
+            { name_en: 'Empty plastic bottle', name_hi: 'खाली प्लास्टिक की बोतल', name_te: 'ఖాళీ ప్లాస్టిక్ సీసా' },
+            { name_en: 'Clay or soil', name_hi: 'मिट्टी या मिट्टी', name_te: 'బంకమన్ను లేదా మట్టి' },
+            { name_en: 'Baking soda', name_hi: 'बेकिंग सोडा', name_te: 'బేకింగ్ సోడా' },
+            { name_en: 'Vinegar', name_hi: 'सिरका', name_te: 'వెనిగర్' },
+            { name_en: 'Red food coloring', name_hi: 'लाल खाद्य रंग', name_te: 'ఎరుపు ఫుడ్ కలరింగ్' },
+            { name_en: 'Dish soap', name_hi: 'डिश सोप', name_te: 'డిష్ సోప్' },
+            { name_en: 'Warm water', name_hi: 'गरम पानी', name_te: 'గోరువెచ్చని నీరు' },
+        ],
         steps: [
             {
                 title: 'Step 1: Build the Cone',
@@ -1343,4 +1359,5 @@ export const experiments: Experiment[] = [
 ];
 
     
+
 
