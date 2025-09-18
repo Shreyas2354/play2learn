@@ -1,10 +1,12 @@
 
 "use client";
 
+import Link from 'next/link';
 import {
     Card,
     CardContent,
     CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
   } from "@/components/ui/card";
@@ -17,7 +19,8 @@ import {
     TableRow,
   } from "@/components/ui/table";
   import { Badge } from "@/components/ui/badge";
-  import { CheckCircle, Clock, TrendingUp, UserCheck } from "lucide-react";
+  import { Button } from '@/components/ui/button';
+  import { CheckCircle, Clock, TrendingUp, UserCheck, ClipboardEdit } from "lucide-react";
   import { OverviewChart } from "@/components/dashboard-charts";
 import { useLanguage } from "@/contexts/language-context";
   
@@ -60,6 +63,21 @@ import { useLanguage } from "@/contexts/language-context";
         status: { en: "Status", hi: "स्थिति", te: "స్థితి" },
         needsHelp: { en: "Needs Help", hi: "मदद चाहिए", te: "సహాయం కావాలి" },
         onTrack: { en: "On Track", hi: "पटरी पर", te: "ట్రాక్‌లో ఉంది" },
+        manageContent: {
+            en: "Manage Content",
+            hi: "सामग्री प्रबंधित करें",
+            te: "కంటెంట్‌ను నిర్వహించండి",
+        },
+        manageContentDesc: {
+            en: "Add or edit missions and competition questions.",
+            hi: "मिशन और प्रतियोगिता प्रश्न जोड़ें या संपादित करें।",
+            te: "మిషన్లు మరియు పోటీ ప్రశ్నలను జోడించండి లేదా సవరించండి.",
+        },
+        goToManager: {
+            en: "Go to Content Manager",
+            hi: "सामग्री प्रबंधक पर जाएं",
+            te: "కంటెంట్ మేనేజర్‌కు వెళ్లండి",
+        }
     }
     return (
       <div className="space-y-8">
@@ -174,6 +192,17 @@ import { useLanguage } from "@/contexts/language-context";
             </CardContent>
           </Card>
         </div>
+         <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><ClipboardEdit /> {t('manageContent', pageText)}</CardTitle>
+                <CardDescription>{t('manageContentDesc', pageText)}</CardDescription>
+            </CardHeader>
+            <CardFooter>
+                <Button asChild>
+                    <Link href="/teacher-dashboard/manage-content">{t('goToManager', pageText)}</Link>
+                </Button>
+            </CardFooter>
+         </Card>
       </div>
     );
   }

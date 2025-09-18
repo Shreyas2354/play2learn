@@ -12,6 +12,7 @@ import {
   LogOut,
   Trophy,
   Award,
+  ClipboardEdit,
 } from "lucide-react";
 import { getCurrentUser, logout } from "@/lib/users";
 import type { User } from "@/lib/users";
@@ -55,16 +56,19 @@ export function MainNav() {
       competition: { en: "Competition", hi: "प्रतियोगिता", te: "పోటీ" },
       achievements: { en: "Achievements", hi: "उपलब्धियाँ", te: "విజయాలు" },
       teacherDashboard: { en: "Teacher Dashboard", hi: "शिक्षक डैशबोर्ड", te: "ఉపాధ్యాయ డాష్‌బోర్డ్" },
+      manageContent: { en: "Manage Content", hi: "सामग्री प्रबंधित करें", te: "కంటెంట్‌ను నిర్వహించండి" },
       logout: { en: "Logout", hi: "लॉग आउट", te: "లాగ్అవుట్" },
   }
 
   const navItems = [
-    { href: "/", label: t('dashboard', navText), icon: LayoutDashboard, role: ['student', 'teacher'] },
-    { href: "/missions", label: t('missions', navText), icon: Rocket, role: ['student', 'teacher'] },
-    { href: "/experiments", label: t('experiments', navText), icon: FlaskConical, role: ['student', 'teacher'] },
-    { href: "/competition", label: t('competition', navText), icon: Trophy, role: ['student', 'teacher'] },
+    { href: "/", label: t('dashboard', navText), icon: LayoutDashboard, role: ['student'] },
+    { href: "/missions", label: t('missions', navText), icon: Rocket, role: ['student'] },
+    { href: "/experiments", label: t('experiments', navText), icon: FlaskConical, role: ['student'] },
+    { href: "/competition", label: t('competition', navText), icon: Trophy, role: ['student'] },
     { href: "/achievements", label: t('achievements', navText), icon: Award, role: ['student'] },
+    // Teacher routes
     { href: "/teacher-dashboard", label: t('teacherDashboard', navText), icon: BarChart3, role: ['teacher'] },
+    { href: "/teacher-dashboard/manage-content", label: t('manageContent', navText), icon: ClipboardEdit, role: ['teacher'] },
   ];
 
   const visibleNavItems = navItems.filter(item => user && item.role.includes(user.role));
@@ -78,9 +82,7 @@ export function MainNav() {
       <ul className="space-y-2 flex-grow">
         {visibleNavItems.map((item) => {
           const isActive =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+            pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           return (
             <li key={item.label}>
               <Tooltip>
