@@ -4,7 +4,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { LanguageSwitcher } from "./language-switcher";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,16 +12,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getCurrentUser, logout } from "@/lib/users";
 import type { User } from "@/lib/users";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { LogOut, Languages } from "lucide-react";
 import { useLanguage } from "@/contexts/language-context";
 
 export function SiteHeader() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, setLanguage } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -47,7 +50,6 @@ export function SiteHeader() {
           <SidebarTrigger />
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <LanguageSwitcher />
           {user && (
              <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -68,6 +70,26 @@ export function SiteHeader() {
                     </p>
                   </div>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Languages className="mr-2 h-4 w-4" />
+                    <span>{t('language', headerText)}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem onClick={() => setLanguage("en")}>
+                        English
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setLanguage("hi")}>
+                        हिन्दी (Hindi)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setLanguage("te")}>
+                        తెలుగు (Telugu)
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onSelect={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
