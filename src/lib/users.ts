@@ -11,10 +11,10 @@ export type User = {
 };
 
 const defaultUsers = {
-    'student': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
-    'teacher': { password: 'password', role: 'teacher' },
-    'shreays': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
-    'ram': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
+    'shreyas': { password: '123456', role: 'student', points: 0, badges: [], level: 1 },
+    'ramu': { password: '123456', role: 'student', points: 0, badges: [], level: 1 },
+    'rani': { password: '123456', role: 'teacher' },
+    'tarun': { password: '123456', role: 'teacher' },
 };
 
 // Helper function to initialize and get users from localStorage
