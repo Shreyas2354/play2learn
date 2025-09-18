@@ -61,6 +61,7 @@ export default function ResultsPage() {
 
   const coinsEarned = score * 10;
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+  const isPerfectScore = score === total;
   
   const pageText = {
     missionComplete: {
@@ -214,11 +215,14 @@ export default function ResultsPage() {
         <Button asChild variant="outline">
             <Link href={`/missions/${mission.id}`}><RefreshCw className="mr-2 h-4 w-4"/> {t('tryAgain', pageText)}</Link>
         </Button>
-        {nextMission ? (
+        
+        {isPerfectScore && nextMission && (
           <Button asChild>
             <Link href={`/missions/${nextMission.id}`}>{t('nextLevel', pageText)} <ArrowRight className="ml-2 h-4 w-4"/></Link>
           </Button>
-        ) : (
+        )}
+
+        {isPerfectScore && !nextMission && (
           <Button asChild>
             <Link href="/missions"><Home className="mr-2 h-4 w-4"/> {t('allMissions', pageText)}</Link>
           </Button>
