@@ -84,7 +84,7 @@ import {
         step1Desc: { en: "Engage in timed quizzes, puzzle races, or practical simulations.", hi: "समयबद्ध क्विज़, पहेली दौड़, या व्यावहारिक सिमुलेशन में शामिल हों।", te: "సమయ క్విజ్‌లు, పజిల్ రేసులు లేదా ఆచరణాత్మక అనుకరణలలో పాల్గొనండి." },
         step2Title: { en: "Review & Learn", hi: "समीक्षा करें और सीखें", te: "సమీక్షించండి & నేర్చుకోండి" },
         step2Desc: { en: "After each match, get a detailed breakdown of your answers with explanations.", hi: "प्रत्येक मैच के बाद, स्पष्टीकरण के साथ अपने उत्तरों का विस्तृत विश्लेषण प्राप्त करें।", te: "ప్రతి మ్యాచ్ తర్వాత, వివరణలతో మీ సమాధానాల యొక్క వివరణాత్మక విశ్లేషణను పొందండి." },
-        step3Title: { en: "Master & Win", hi: "मास्टर करें और जीतें", te: "मास्टर करें और जीतें" },
+        step3Title: { en: "Master & Win", hi: "मास्टर करें और जीतें", te: "మాస్టర్ చేయండి మరియు గెలవండి" },
         step3Desc: { en: "Use the practice mode to master concepts and climb the leaderboard for rewards!", hi: "अवधारणाओं में महारत हासिल करने के लिए अभ्यास मोड का उपयोग करें और पुरस्कारों के लिए लीडरबोर्ड पर चढ़ें!", te: "భావనలను నేర్చుకోవడానికి ప్రాక్టీస్ మోడ్‌ను ఉపయోగించండి మరియు బహుమతుల కోసం లీడర్‌బోర్డ్‌ను అధిరోహించండి!" },
     }
 
@@ -237,4 +237,3 @@ import {
       </div>
     );
   }
-  

@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   Rocket,
   FlaskConical,
-  Users,
   BarChart3,
   LogOut,
   Trophy,
