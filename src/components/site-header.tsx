@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -17,19 +17,26 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getCurrentUser, logout } from "@/lib/users";
 import type { User } from "@/lib/users";
-import { LogOut, Languages } from "lucide-react";
+import { LogOut, Languages, Camera, User as UserIcon } from "lucide-react";
 import { useLanguage } from "@/contexts/language-context";
 
 export function SiteHeader() {
   const router = useRouter();
   const { t, setLanguage } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
+  const [profilePic, setProfilePic] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setUser(getCurrentUser());
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+    if (currentUser) {
+      const storedPic = localStorage.getItem(`profile-pic-${currentUser.username}`);
+      setProfilePic(storedPic);
+    }
   }, []);
 
   const handleLogout = () => {
@@ -37,10 +44,32 @@ export function SiteHeader() {
     router.push('/login');
     window.location.reload();
   };
+
+  const handlePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && user) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        localStorage.setItem(`profile-pic-${user.username}`, base64String);
+        setProfilePic(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    if (user) {
+      localStorage.removeItem(`profile-pic-${user.username}`);
+      setProfilePic(null);
+    }
+  };
   
   const headerText = {
     logout: { en: "Logout", hi: "लॉग आउट", te: "లాగ్అవుట్" },
     language: { en: "Language", hi: "भाषा", te: "భాష" },
+    uploadPhoto: { en: "Upload Photo", hi: "फ़ोटो अपलोड करें", te: "ఫోటోను అప్‌లోడ్ చేయండి" },
+    removePhoto: { en: "Remove Photo", hi: "फ़ोटो हटाएं", te: "ఫోటోను తీసివేయండి" },
   }
 
   return (
@@ -55,6 +84,7 @@ export function SiteHeader() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-9 w-9">
+                     {profilePic && <AvatarImage src={profilePic} alt={user.username} />}
                      <AvatarFallback>
                       {user.username.charAt(0).toUpperCase()}
                     </AvatarFallback>
@@ -71,6 +101,23 @@ export function SiteHeader() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
+                  <Camera className="mr-2 h-4 w-4" />
+                  <span>{t('uploadPhoto', headerText)}</span>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handlePictureUpload}
+                    className="hidden"
+                    accept="image/png, image/jpeg"
+                  />
+                </DropdownMenuItem>
+                {profilePic && (
+                  <DropdownMenuItem onSelect={handleRemovePhoto}>
+                    <UserIcon className="mr-2 h-4 w-4" />
+                    <span>{t('removePhoto', headerText)}</span>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
                     <Languages className="mr-2 h-4 w-4" />
