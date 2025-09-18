@@ -18,16 +18,29 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table";
+  import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+  } from "@/components/ui/tabs";
   import { Badge } from "@/components/ui/badge";
   import { Trophy, User, Users, Microscope, Atom, TestTube, Calculator, Sparkles, BookCheck } from "lucide-react";
   import { useLanguage } from "@/contexts/language-context";
 import { cn } from "@/lib/utils";
   
-  const leaderboardData = [
+  const teamLeaderboardData = [
     { rank: 1, team: "Cosmic Coders", score: 12500, players: ["Aarav", "Priya"] },
     { rank: 2, team: "Quantum Questers", score: 11800, players: ["Rohan", "Sita"] },
     { rank: 3, team: "Bio Builders", score: 9500, players: ["Vikram", "Anjali"] },
     { rank: 4, team: "Physics Phenoms", score: 8200, players: ["Meera", "Karan"] },
+  ];
+
+  const soloLeaderboardData = [
+    { rank: 1, name: "Priya P.", score: 8200 },
+    { rank: 2, name: "Rohan D.", score: 7500 },
+    { rank: 3, name: "Aarav S.", score: 7100 },
+    { rank: 4, name: "Meera K.", score: 6800 },
   ];
   
   type Mode = 'solo' | 'team';
@@ -46,7 +59,7 @@ import { cn } from "@/lib/utils";
         if (selectedMode) {
             router.push(`/competition/${selectedMode}/${arena}`);
         } else {
-            // Optional: Add a toast or alert to select a mode first
+            // This case should ideally not be reached with the new flow
             alert("Please select a mode first!");
         }
     }
@@ -77,19 +90,30 @@ import { cn } from "@/lib/utils";
         biology: { en: "Biology", hi: "जीवविज्ञान", te: "జీవశాస్త్రం" },
         math: { en: "Mathematics", hi: "गणित", te: "గణితం" },
         megaStem: { en: "Mega STEM Tournament", hi: "मेगा स्टेम टूर्नामेंट", te: "మెగా స్టెమ్ టోర్నమెంట్" },
-        leaderboard: {
-            en: "Team Leaderboard",
-            hi: "टीम लीडरबोर्ड",
-            te: "జట్టు లీడర్‌బోర్డ్",
+        leaderboards: {
+            en: "Leaderboards",
+            hi: "लीडरबोर्ड",
+            te: "లీడర్‌బోర్డ్లు",
         },
-        leaderboardDesc: {
-            en: "See how your team stacks up against the competition.",
-            hi: "देखें कि आपकी टीम प्रतिस्पर्धा में कैसी है।",
-            te: "మీ జట్టు పోటీలో ఎలా ఉందో చూడండి.",
+        leaderboardsDesc: {
+            en: "See how you stack up against the competition.",
+            hi: "देखें कि आप प्रतिस्पर्धा में कैसे हैं।",
+            te: "మీరు పోటీలో ఎలా ఉన్నారో చూడండి.",
+        },
+        teamLeaderboard: {
+            en: "Team",
+            hi: "टीम",
+            te: "జట్టు",
+        },
+        soloLeaderboard: {
+            en: "Solo",
+            hi: "एकल",
+            te: "సోలో",
         },
         rank: { en: "Rank", hi: "रैंक", te: "ర్యాంక్" },
         teamLabel: { en: "Team", hi: "टीम", te: "జట్టు" },
         players: { en: "Players", hi: "खिलाड़ी", te: "ఆటగాళ్ళు" },
+        name: { en: "Name", hi: "नाम", te: "పేరు" },
         score: { en: "Score", hi: "स्कोर", te: "స్కోర్" },
         howItWorks: {
             en: "A Complete Learning Loop",
@@ -157,74 +181,104 @@ import { cn } from "@/lib/utils";
             </div>
         </div>
 
-        {/* Arena Selection */}
-        <div className="space-y-4">
-            <h2 className="text-2xl font-headline font-bold">{t('selectArena', pageText)}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('physics')}>
-                    <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
-                        <Atom className="w-10 h-10 text-blue-500"/>
-                        <p className="font-semibold">{t('physics', pageText)}</p>
-                    </CardContent>
-                </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('chemistry')}>
-                    <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
-                        <TestTube className="w-10 h-10 text-purple-500"/>
-                        <p className="font-semibold">{t('chemistry', pageText)}</p>
-                    </CardContent>
-                </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('biology')}>
-                    <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
-                        <Microscope className="w-10 h-10 text-green-500"/>
-                        <p className="font-semibold">{t('biology', pageText)}</p>
-                    </CardContent>
-                </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('mathematics')}>
-                    <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
-                        <Calculator className="w-10 h-10 text-orange-500"/>
-                        <p className="font-semibold">{t('math', pageText)}</p>
-                    </CardContent>
-                </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer col-span-2 md:col-span-1 lg:col-span-1" onClick={() => handleArenaSelect('mega')}>
-                    <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
-                        <Sparkles className="w-10 h-10 text-yellow-500"/>
-                        <p className="font-semibold">{t('megaStem', pageText)}</p>
-                    </CardContent>
-                </Card>
+        {/* Arena Selection - Conditionally Rendered */}
+        {selectedMode && (
+            <div className="space-y-4 animate-in fade-in duration-500">
+                <h2 className="text-2xl font-headline font-bold">{t('selectArena', pageText)}</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('physics')}>
+                        <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
+                            <Atom className="w-10 h-10 text-blue-500"/>
+                            <p className="font-semibold">{t('physics', pageText)}</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('chemistry')}>
+                        <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
+                            <TestTube className="w-10 h-10 text-purple-500"/>
+                            <p className="font-semibold">{t('chemistry', pageText)}</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('biology')}>
+                        <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
+                            <Microscope className="w-10 h-10 text-green-500"/>
+                            <p className="font-semibold">{t('biology', pageText)}</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('mathematics')}>
+                        <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
+                            <Calculator className="w-10 h-10 text-orange-500"/>
+                            <p className="font-semibold">{t('math', pageText)}</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer col-span-2 md:col-span-1 lg:col-span-1" onClick={() => handleArenaSelect('mega')}>
+                        <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
+                            <Sparkles className="w-10 h-10 text-yellow-500"/>
+                            <p className="font-semibold">{t('megaStem', pageText)}</p>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
-        </div>
+        )}
   
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Trophy className="text-yellow-500" />
-              {t('leaderboard', pageText)}
+              {t('leaderboards', pageText)}
             </CardTitle>
             <CardDescription>
-              {t('leaderboardDesc', pageText)}
+              {t('leaderboardsDesc', pageText)}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">{t('rank', pageText)}</TableHead>
-                  <TableHead>{t('teamLabel', pageText)}</TableHead>
-                  <TableHead>{t('players', pageText)}</TableHead>
-                  <TableHead className="text-right">{t('score', pageText)}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {leaderboardData.map((row) => (
-                  <TableRow key={row.rank}>
-                    <TableCell className="font-medium">{row.rank}</TableCell>
-                    <TableCell className="font-semibold">{row.team}</TableCell>
-                    <TableCell>{row.players.join(', ')}</TableCell>
-                    <TableCell className="text-right font-bold text-primary">{row.score}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <Tabs defaultValue="team">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="team">{t('teamLeaderboard', pageText)}</TabsTrigger>
+                    <TabsTrigger value="solo">{t('soloLeaderboard', pageText)}</TabsTrigger>
+                </TabsList>
+                <TabsContent value="team">
+                    <Table>
+                    <TableHeader>
+                        <TableRow>
+                        <TableHead className="w-[100px]">{t('rank', pageText)}</TableHead>
+                        <TableHead>{t('teamLabel', pageText)}</TableHead>
+                        <TableHead>{t('players', pageText)}</TableHead>
+                        <TableHead className="text-right">{t('score', pageText)}</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {teamLeaderboardData.map((row) => (
+                        <TableRow key={row.rank}>
+                            <TableCell className="font-medium">{row.rank}</TableCell>
+                            <TableCell className="font-semibold">{row.team}</TableCell>
+                            <TableCell>{row.players.join(', ')}</TableCell>
+                            <TableCell className="text-right font-bold text-primary">{row.score}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                    </Table>
+                </TabsContent>
+                <TabsContent value="solo">
+                    <Table>
+                    <TableHeader>
+                        <TableRow>
+                        <TableHead className="w-[100px]">{t('rank', pageText)}</TableHead>
+                        <TableHead>{t('name', pageText)}</TableHead>
+                        <TableHead className="text-right">{t('score', pageText)}</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {soloLeaderboardData.map((row) => (
+                        <TableRow key={row.rank}>
+                            <TableCell className="font-medium">{row.rank}</TableCell>
+                            <TableCell className="font-semibold">{row.name}</TableCell>
+                            <TableCell className="text-right font-bold text-primary">{row.score}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                    </Table>
+                </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
   
