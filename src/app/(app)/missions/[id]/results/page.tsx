@@ -8,7 +8,7 @@ import { missions } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Award, Coins, Home, RefreshCw, ShoppingCart } from 'lucide-react';
+import { Award, Coins, Home, RefreshCw, ShoppingCart, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/language-context';
 
 export default function ResultsPage() {
@@ -46,6 +46,13 @@ export default function ResultsPage() {
     return notFound();
   }
   
+  // Find the next level
+  const subjectMissions = missions.filter(m => m.subject === mission.subject);
+  const currentMissionIndex = subjectMissions.findIndex(m => m.id === mission.id);
+  const nextMission = currentMissionIndex !== -1 && currentMissionIndex < subjectMissions.length - 1
+    ? subjectMissions[currentMissionIndex + 1]
+    : null;
+
   if (!isClient) {
     return null; 
   }
@@ -129,6 +136,11 @@ export default function ResultsPage() {
         hi: "पुनः प्रयास करें",
         te: "మళ్లీ ప్రయత్నించండి",
     },
+    nextLevel: {
+        en: "Next Level",
+        hi: "अगला स्तर",
+        te: "తదుపరి స్థాయి",
+    },
     allMissions: {
         en: "All Missions",
         hi: "सभी मिशन",
@@ -200,9 +212,15 @@ export default function ResultsPage() {
         <Button asChild variant="outline">
             <Link href={`/missions/${mission.id}`}><RefreshCw className="mr-2 h-4 w-4"/> {t('tryAgain', pageText)}</Link>
         </Button>
-        <Button asChild>
+        {nextMission ? (
+          <Button asChild>
+            <Link href={`/missions/${nextMission.id}`}>{t('nextLevel', pageText)} <ArrowRight className="ml-2 h-4 w-4"/></Link>
+          </Button>
+        ) : (
+          <Button asChild>
             <Link href="/missions"><Home className="mr-2 h-4 w-4"/> {t('allMissions', pageText)}</Link>
-        </Button>
+          </Button>
+        )}
       </div>
     </div>
   );
