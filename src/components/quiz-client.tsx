@@ -117,7 +117,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
   
   const handleSubmit = () => {
     let answer = selectedAnswer;
-    if (currentQuestion.type === 'food-chain-visual' || currentQuestion.type === 'picture-puzzle') {
+    if (currentQuestion.type === 'food-chain-visual' || currentQuestion.type === 'picture-puzzle' || currentQuestion.type === 'puzzle') {
         answer = puzzleAnswer;
     }
 
@@ -156,12 +156,13 @@ export function QuizClient({ mission }: { mission: Mission }) {
         );
     }
 
-    if (currentQuestion.type === 'picture-puzzle') {
+    if (currentQuestion.type === 'picture-puzzle' || currentQuestion.type === 'puzzle') {
         return (
             <PicturePuzzle
                 question={currentQuestion}
                 showFeedback={showFeedback}
                 onAnswerChange={setPuzzleAnswer}
+                value={puzzleAnswer}
             />
         );
     }
@@ -286,7 +287,7 @@ export function QuizClient({ mission }: { mission: Mission }) {
               onClick={handleSubmit}
               disabled={
                   (currentQuestion.type === 'mcq' && !selectedAnswer) ||
-                  (currentQuestion.type === 'picture-puzzle' && !puzzleAnswer) ||
+                  ((currentQuestion.type === 'picture-puzzle' || currentQuestion.type === 'puzzle') && !puzzleAnswer) ||
                   (currentQuestion.type === 'food-chain-visual' && puzzleAnswer.split(',').some(p => p === ''))
               }
               className="bg-accent hover:bg-accent/90"

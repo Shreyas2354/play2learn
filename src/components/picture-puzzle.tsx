@@ -10,9 +10,10 @@ type PicturePuzzleProps = {
   question: Question;
   showFeedback: boolean;
   onAnswerChange: (answer: string) => void;
+  value: string;
 };
 
-export function PicturePuzzle({ question, showFeedback, onAnswerChange }: PicturePuzzleProps) {
+export function PicturePuzzle({ question, showFeedback, onAnswerChange, value }: PicturePuzzleProps) {
   const { t } = useLanguage();
 
   return (
@@ -31,6 +32,7 @@ export function PicturePuzzle({ question, showFeedback, onAnswerChange }: Pictur
       )}
       <Input
         type="text"
+        value={value}
         onChange={(e) => onAnswerChange(e.target.value)}
         placeholder={t('enterAnswer', {en: 'Enter your answer', hi: 'अपना उत्तर दर्ज करें', te: 'మీ సమాధానం నమోదు చేయండి'})}
         className="max-w-xs text-center text-2xl h-14 font-bold"
