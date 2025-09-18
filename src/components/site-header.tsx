@@ -81,13 +81,18 @@ export function SiteHeader() {
     uploadPhoto: { en: "Upload Photo", hi: "फ़ोटो अपलोड करें", te: "ఫోటోను అప్‌లోడ్ చేయండి" },
     removePhoto: { en: "Remove Photo", hi: "फ़ोटो हटाएं", te: "ఫోటోను తీసివేయండి" },
     studentDetails: { en: "Student Details", hi: "छात्र विवरण", te: "విద్యార్థి వివరాలు" },
-    studentName: { en: "Student Name", hi: "छात्र का नाम", te: "విద్యార్థి పేరు" },
+    teacherDetails: { en: "Teacher Details", hi: "शिक्षक विवरण", te: "ఉపాధ్యాయ వివరాలు" },
+    name: { en: "Name", hi: "नाम", te: "పేరు" },
     area: { en: "Area", hi: "क्षेत्र", te: "ప్రాంతం" },
     fatherName: { en: "Father's Name", hi: "पिता का नाम", te: "తండ్రి పేరు" },
     motherName: { en: "Mother's Name", hi: "माता का नाम", te: "తల్లి పేరు" },
     contact: { en: "Contact", hi: "संपर्क", te: "సంప్రదించండి" },
+    qualification: { en: "Qualification", hi: "योग्यता", te: "అర్హత" },
+    address: { en: "Address", hi: "पता", te: "చిరునామా" },
     close: { en: "Close", hi: "बंद करें", te: "మూసివేయండి" },
   }
+
+  const isTeacher = user?.role === 'teacher';
 
   return (
     <>
@@ -174,28 +179,43 @@ export function SiteHeader() {
       <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('studentDetails', headerText)}</DialogTitle>
+            <DialogTitle>{isTeacher ? t('teacherDetails', headerText) : t('studentDetails', headerText)}</DialogTitle>
             <DialogDescription>
               This is your profile information.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-              <span className="text-right font-semibold">{t('studentName', headerText)}</span>
+              <span className="text-right font-semibold">{t('name', headerText)}</span>
               <span>{user?.username || 'N/A'}</span>
             </div>
-             <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-              <span className="text-right font-semibold">{t('area', headerText)}</span>
-              <span>Placeholder Area</span>
-            </div>
-            <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-              <span className="text-right font-semibold">{t('fatherName', headerText)}</span>
-              <span>Placeholder Father's Name</span>
-            </div>
-             <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-              <span className="text-right font-semibold">{t('motherName', headerText)}</span>
-              <span>Placeholder Mother's Name</span>
-            </div>
+            {isTeacher ? (
+                <>
+                    <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                        <span className="text-right font-semibold">{t('qualification', headerText)}</span>
+                        <span>Placeholder Qualification</span>
+                    </div>
+                    <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                        <span className="text-right font-semibold">{t('address', headerText)}</span>
+                        <span>Placeholder Address</span>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                        <span className="text-right font-semibold">{t('area', headerText)}</span>
+                        <span>Placeholder Area</span>
+                    </div>
+                    <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                        <span className="text-right font-semibold">{t('fatherName', headerText)}</span>
+                        <span>Placeholder Father's Name</span>
+                    </div>
+                    <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                        <span className="text-right font-semibold">{t('motherName', headerText)}</span>
+                        <span>Placeholder Mother's Name</span>
+                    </div>
+                </>
+            )}
              <div className="grid grid-cols-[150px_1fr] items-center gap-4">
               <span className="text-right font-semibold">{t('contact', headerText)}</span>
               <span>+91 12345 67890</span>

@@ -82,7 +82,9 @@ export function MainNav() {
       <ul className="space-y-2 flex-grow">
         {visibleNavItems.map((item) => {
           const isActive =
-            pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            (item.href === "/" && pathname === "/") ||
+            (item.href === "/teacher-dashboard" && pathname === "/teacher-dashboard") ||
+            (item.href !== "/" && item.href !== "/teacher-dashboard" && pathname.startsWith(item.href));
           return (
             <li key={item.label}>
               <Tooltip>
