@@ -60,7 +60,7 @@ export default function LoginPage() {
       if (user.role === 'teacher') {
         router.push('/teacher-dashboard');
       } else {
-        router.push('/');
+        router.push('/dashboard');
       }
     } else {
       toast({

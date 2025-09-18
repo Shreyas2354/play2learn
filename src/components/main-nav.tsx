@@ -61,7 +61,7 @@ export function MainNav() {
   }
 
   const navItems = [
-    { href: "/", label: t('dashboard', navText), icon: LayoutDashboard, role: ['student'] },
+    { href: "/dashboard", label: t('dashboard', navText), icon: LayoutDashboard, role: ['student'] },
     { href: "/missions", label: t('missions', navText), icon: Rocket, role: ['student'] },
     { href: "/experiments", label: t('experiments', navText), icon: FlaskConical, role: ['student'] },
     { href: "/competition", label: t('competition', navText), icon: Trophy, role: ['student'] },
@@ -82,9 +82,9 @@ export function MainNav() {
       <ul className="space-y-2 flex-grow">
         {visibleNavItems.map((item) => {
           const isActive =
-            (item.href === "/" && pathname === "/") ||
+            (item.href === "/dashboard" && pathname === "/dashboard") ||
             (item.href === "/teacher-dashboard" && pathname === "/teacher-dashboard") ||
-            (item.href !== "/" && item.href !== "/teacher-dashboard" && pathname.startsWith(item.href));
+            (item.href !== "/dashboard" && item.href !== "/teacher-dashboard" && pathname.startsWith(item.href));
           return (
             <li key={item.label}>
               <Tooltip>
