@@ -1599,9 +1599,81 @@ export const experiments: Experiment[] = [
                 imageHint: 'volcano erupting',
             },
         ]
+    },
+    {
+        id: 'physics-density-tower',
+        title: 'Colorful Density Tower',
+        title_hi: 'रंगीन घनत्व टॉवर',
+        title_te: 'రంగుల సాంద్రత టవర్',
+        description: 'Learn about density by stacking different liquids.',
+        description_hi: 'विभिन्न तरल पदार्थों को ढेर करके घनत्व के बारे में जानें।',
+        description_te: 'వివిధ ద్రవాలను పేర్చడం ద్వారా సాంద్రత గురించి తెలుసుకోండి.',
+        imageUrl: 'https://picsum.photos/seed/exp2/600/400',
+        imageHint: 'colorful liquids',
+        ingredients: [
+            { name_en: 'Tall, clear glass or jar', name_hi: 'लंबा, साफ गिलास या जार', name_te: 'పొడవైన, స్పష్టమైన గాజు లేదా కూజా' },
+            { name_en: 'Honey', name_hi: 'शहद', name_te: 'తేనె' },
+            { name_en: 'Dish soap', name_hi: 'डिश सोप', name_te: 'డిష్ సోప్' },
+            { name_en: 'Water (with food coloring)', name_hi: 'पानी (खाद्य रंग के साथ)', name_te: 'నీరు (ఫుడ్ కలరింగ్‌తో)' },
+            { name_en: 'Vegetable oil', name_hi: 'వనస్పతి నూనె', name_te: 'వనస్పతి నూనె' },
+            { name_en: 'Small objects (grape, plastic bead)', name_hi: 'छोटी वस्तुएं (अंगूर, प्लास्टिक मोती)', name_te: 'చిన్న వస్తువులు (ద్రాక్ష, ప్లాస్టిక్ పూస)' },
+        ],
+        steps: [
+            {
+                title: 'Step 1: Pour the Honey',
+                title_hi: 'चरण 1: शहद डालें',
+                title_te: 'దశ 1: తేనె పోయాలి',
+                description: 'Carefully pour honey into the glass, making sure it doesn\'t touch the sides.',
+                description_hi: 'सावधानी से गिलास में शहद डालें, यह सुनिश्चित करते हुए कि यह किनारों को न छुए।',
+                description_te: 'గాజులో తేనెను జాగ్రత్తగా పోయాలి, అది అంచులకు తగలకుండా చూసుకోండి.',
+                imageUrl: 'https://picsum.photos/seed/exp2-step1/600/400',
+                imageHint: 'pouring honey',
+            },
+            {
+                title: 'Step 2: Add Dish Soap',
+                title_hi: 'चरण 2: डिश सोप डालें',
+                title_te: 'దశ 2: డిష్ సోప్ జోడించండి',
+                description: 'Slowly pour the dish soap on top of the honey. It should sit on top.',
+                description_hi: 'धीरे-धीरे शहद के ऊपर डिश सोप डालें। यह ऊपर बैठना चाहिए।',
+                description_te: 'తేనె పైన నెమ్మదిగా డిష్ సోప్ పోయాలి. అది పైన కూర్చోవాలి.',
+                imageUrl: 'https://picsum.photos/seed/exp2-step2/600/400',
+                imageHint: 'pouring soap',
+            },
+            {
+                title: 'Step 3: Add Colored Water',
+                title_hi: 'चरण 3: रंगीन पानी डालें',
+                title_te: 'దశ 3: రంగు నీటిని జోడించండి',
+                description: 'Gently add the colored water. Tilt the glass and pour slowly down the side.',
+                description_hi: 'धीरे-धीरे रंगीन पानी डालें। गिलास को झुकाएं और धीरे-धीरे किनारे से नीचे डालें।',
+                description_te: 'రంగు నీటిని మెల్లగా జోడించండి. గాజును వంచి, నెమ్మదిగా అంచు నుండి క్రిందికి పోయాలి.',
+                imageUrl: 'https://picsum.photos/seed/exp2-step3/600/400',
+                imageHint: 'pouring water',
+            },
+            {
+                title: 'Step 4: Add Vegetable Oil',
+                title_hi: 'चरण 4: वनस्पति तेल डालें',
+                title_te: 'దశ 4: వనస్పతి నూనె జోడించండి',
+                description: 'Finally, slowly pour in the vegetable oil. It will form the top layer.',
+                description_hi: 'अंत में, धीरे-धीरे वनस्पति तेल डालें। यह सबसे ऊपरी परत बनाएगा।',
+                description_te: 'చివరగా, నెమ్మదిగా వనస్పతి నూనె పోయాలి. ఇది పై పొరను ఏర్పరుస్తుంది.',
+                imageUrl: 'https://picsum.photos/seed/exp2-step4/600/400',
+                imageHint: 'pouring oil',
+            },
+            {
+                title: 'Step 5: Test the Layers',
+                title_hi: 'चरण 5: परतों का परीक्षण करें',
+                title_te: 'దశ 5: పొరలను పరీక్షించండి',
+                description: 'Gently drop small objects into the tower. See where they stop! The grape will sink lower than the plastic bead because it is more dense.',
+                description_hi: 'धीरे-धीरे टॉवर में छोटी वस्तुएं गिराएं। देखें कि वे कहाँ रुकते हैं! अंगूर प्लास्टिक के मोती से नीचे डूब जाएगा क्योंकि यह अधिक घना है।',
+                description_te: 'టవర్‌లో చిన్న వస్తువులను మెల్లగా వదలండి. అవి ఎక్కడ ఆగిపోతాయో చూడండి! ద్రాక్ష ప్లాస్టిక్ పూస కంటే తక్కువగా మునిగిపోతుంది ఎందుకంటే ఇది ఎక్కువ సాంద్రత కలిగి ఉంటుంది.',
+                imageUrl: 'https://picsum.photos/seed/exp2-step5/600/400',
+                imageHint: 'density tower',
+            },
+        ]
     }
 ];
 
     
 
     
+
