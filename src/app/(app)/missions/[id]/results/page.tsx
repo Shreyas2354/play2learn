@@ -26,11 +26,13 @@ export default function ResultsPage() {
     const storedScore = localStorage.getItem(`mission-${missionId}-score`);
     const storedTotal = localStorage.getItem(`mission-${missionId}-total`);
     if (storedScore && storedTotal) {
-      setScore(JSON.parse(storedScore));
-      setTotal(JSON.parse(storedTotal));
+      const currentScore = JSON.parse(storedScore);
+      const totalQuestions = JSON.parse(storedTotal);
+      setScore(currentScore);
+      setTotal(totalQuestions);
 
-      // If the user passed, mark the mission as complete
-      if (JSON.parse(storedScore) > 0) {
+      // If the user gets a perfect score, mark the mission as complete
+      if (currentScore === totalQuestions) {
         const completedMissionsStr = localStorage.getItem('completedMissions');
         const completedMissions = completedMissionsStr ? JSON.parse(completedMissionsStr) : [];
         if (!completedMissions.includes(missionId)) {
