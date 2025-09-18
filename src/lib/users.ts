@@ -14,6 +14,7 @@ const defaultUsers = {
     'student': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
     'teacher': { password: 'password', role: 'teacher' },
     'shreays': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
+    'ram': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
 };
 
 // Helper function to initialize and get users from localStorage
@@ -22,16 +23,17 @@ function getUsers() {
     return {};
   }
   try {
-    let users = localStorage.getItem('users');
-    if (!users) {
-      // If no users exist, initialize with default users
+    const usersStr = localStorage.getItem('users');
+    if (usersStr) {
+      return JSON.parse(usersStr);
+    } else {
+      // If no users exist, initialize with default users and return them.
       localStorage.setItem('users', JSON.stringify(defaultUsers));
-      users = JSON.stringify(defaultUsers);
+      return defaultUsers;
     }
-    return JSON.parse(users);
   } catch (error) {
     console.error("Failed to parse users from localStorage", error);
-    // If parsing fails, reset to default
+    // If parsing fails, reset to default to prevent app crash
     localStorage.setItem('users', JSON.stringify(defaultUsers));
     return defaultUsers;
   }
@@ -90,6 +92,8 @@ export function login(username: string, password: string): User | null {
 export function logout() {
   if (typeof window === 'undefined') return;
   localStorage.removeItem('currentUser');
+  // Dispatch a storage event to notify other tabs/components of logout
+  window.dispatchEvent(new Event('storage'));
 }
 
 // Get current user function
