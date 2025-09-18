@@ -55,11 +55,20 @@ export default function SignupPage() {
       });
       router.push('/login');
     } catch (error) {
-      toast({
-        title: "Signup failed",
-        description: (error as Error).message,
-        variant: "destructive",
-      });
+      const errorMessage = (error as Error).message;
+      if (errorMessage.includes('Username already exists')) {
+        toast({
+            title: "Username Taken",
+            description: "This username is already in use. Please choose another one.",
+            variant: "destructive",
+        });
+      } else {
+         toast({
+            title: "Signup failed",
+            description: errorMessage,
+            variant: "destructive",
+        });
+      }
       setIsLoading(false);
     }
   };
