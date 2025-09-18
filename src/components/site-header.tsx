@@ -88,6 +88,7 @@ export function SiteHeader() {
     motherName: { en: "Mother's Name", hi: "माता का नाम", te: "తల్లి పేరు" },
     contact: { en: "Contact", hi: "संपर्क", te: "సంప్రదించండి" },
     qualification: { en: "Qualification", hi: "योग्यता", te: "అర్హత" },
+    subjectTaught: { en: "Subject Taught", hi: "पढ़ाया जाने वाला विषय", te: "బోధించే విషయం" },
     address: { en: "Address", hi: "पता", te: "చిరునామా" },
     close: { en: "Close", hi: "बंद करें", te: "మూసివేయండి" },
   }
@@ -194,6 +195,10 @@ export function SiteHeader() {
                     <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                         <span className="text-right font-semibold">{t('qualification', headerText)}</span>
                         <span>Placeholder Qualification</span>
+                    </div>
+                    <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                        <span className="text-right font-semibold">{t('subjectTaught', headerText)}</span>
+                        <span>Physics</span>
                     </div>
                     <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                         <span className="text-right font-semibold">{t('address', headerText)}</span>

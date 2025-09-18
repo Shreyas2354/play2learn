@@ -23,16 +23,23 @@ export default function CompetitionQuizPage() {
   const { mode, subject } = params;
   const [isPending, startTransition] = useTransition();
 
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answerState, setAnswerState] = useState<AnswerState>("unanswered");
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
+  const [isClient, setIsClient] = useState(false);
 
-  const questions = competitionQuestions.filter(q => q.subject === subject).slice(0, 20);
-  const currentQuestion: Question = questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  useEffect(() => {
+    setIsClient(true);
+    const filteredQuestions = competitionQuestions.filter(q => q.subject === subject).slice(0, 20);
+    setQuestions(filteredQuestions);
+  }, [subject]);
+  
+  const currentQuestion: Question | undefined = questions[currentQuestionIndex];
+  const progress = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -62,7 +69,7 @@ export default function CompetitionQuizPage() {
   }
 
   const handleSubmit = () => {
-    if (!selectedAnswer) return;
+    if (!selectedAnswer || !currentQuestion) return;
     
     setShowFeedback(true);
     
@@ -88,6 +95,10 @@ export default function CompetitionQuizPage() {
   const subjectName = (subject as string).charAt(0).toUpperCase() + (subject as string).slice(1);
   const modeName = (mode as string).charAt(0).toUpperCase() + (mode as string).slice(1);
 
+  if (!isClient) {
+    return null; // or a loading spinner
+  }
+
   if (questions.length === 0) {
       return (
         <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
@@ -104,6 +115,11 @@ export default function CompetitionQuizPage() {
             </Card>
         </div>
       )
+  }
+
+  if (!currentQuestion) {
+    // Should not happen if questions.length > 0, but as a safeguard
+    return <div>Loading question...</div>;
   }
 
   return (
