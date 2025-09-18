@@ -28,7 +28,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 import { PicturePuzzle } from "./picture-puzzle";
-import { getHintAction } from "@/app/actions/get-hint";
 import { Balloon } from "./balloon";
 import { FoodChainPuzzle } from "./food-chain-puzzle";
 
@@ -46,9 +45,6 @@ export function QuizClient({ mission }: { mission: Mission }) {
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   
-  const [hint, setHint] = useState<string | null>(null);
-  const [hintLevel, setHintLevel] = useState(1);
-  const [isHintLoading, setIsHintLoading] = useState(false);
   const [puzzleAnswer, setPuzzleAnswer] = useState("");
 
   const questions = mission.questions;
@@ -68,8 +64,6 @@ export function QuizClient({ mission }: { mission: Mission }) {
     setSelectedAnswer(null);
     setAnswerState("unanswered");
     setShowFeedback(false);
-    setHint(null);
-    setHintLevel(1);
     setPuzzleAnswer("");
   }, [currentQuestionIndex]);
 
@@ -87,32 +81,6 @@ export function QuizClient({ mission }: { mission: Mission }) {
         variant: "destructive",
       });
     }
-  };
-
-  const handleGetHint = async () => {
-    setIsHintLoading(true);
-    setHint(null);
-
-    const studentPerformance = `The student has attempted this question ${hintLevel -1} times. Last answer was '${selectedAnswer || puzzleAnswer}'.`;
-    
-    const response = await getHintAction({
-      question: t('text', currentQuestion),
-      studentPerformance,
-      hintLevel,
-    });
-    
-    if (response.error) {
-        toast({
-            title: "Error getting hint",
-            description: response.error,
-            variant: "destructive",
-        });
-    } else {
-        setHint(response.hint || null);
-        setHintLevel(prev => prev + 1);
-    }
-    
-    setIsHintLoading(false);
   };
   
   const handleSubmit = () => {
@@ -255,24 +223,8 @@ export function QuizClient({ mission }: { mission: Mission }) {
         <CardContent className="space-y-4">
           <Progress value={progress} className="w-full" />
           {renderQuizInterface()}
-          {hint && (
-             <Alert className="bg-accent/10 border-accent/20">
-               <Lightbulb className="h-4 w-4" />
-               <AlertTitle>Hint</AlertTitle>
-               <AlertDescription>{hint}</AlertDescription>
-             </Alert>
-          )}
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <Button variant="ghost" onClick={handleGetHint} disabled={isHintLoading || showFeedback}>
-            {isHintLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Lightbulb className="mr-2 h-4 w-4" />
-            )}
-            {hintLevel > 1 ? "Get a better hint" : "Get a hint"}
-          </Button>
-          
+        <CardFooter className="flex flex-col sm:flex-row justify-end items-center gap-4">
           {showFeedback ? (
             <div className="flex items-center gap-4">
                 {answerState === 'correct' && <Alert variant="default" className="p-2 border-green-500 bg-green-50 text-green-700 font-semibold"><CheckCircle2 className="h-5 w-5 mr-2" />Correct!</Alert>}
