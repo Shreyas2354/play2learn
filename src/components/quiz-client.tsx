@@ -20,8 +20,6 @@ import { useToast } from "@/hooks/use-toast";
 import {
   CheckCircle2,
   XCircle,
-  Lightbulb,
-  Loader2,
   Volume2,
   ArrowRight,
 } from "lucide-react";
