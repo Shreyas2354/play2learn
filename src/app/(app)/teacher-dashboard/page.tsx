@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
     Card,
@@ -23,16 +24,32 @@ import {
   import { CheckCircle, Clock, TrendingUp, UserCheck, ClipboardEdit, Atom } from "lucide-react";
   import { OverviewChart, SubjectPerformanceChart } from "@/components/dashboard-charts";
 import { useLanguage } from "@/contexts/language-context";
-  
-  const students = [
-    { name: "Aarav Sharma", lastScore: 75, status: "Needs Help" },
-    { name: "Priya Patel", lastScore: 92, status: "On Track" },
-    { name: "Rohan Das", lastScore: 88, status: "On Track" },
-    { name: "Sita Reddy", lastScore: 68, status: "Needs Help" },
-  ];
-  
+import { getStudents } from '@/lib/users';
+import type { User } from '@/lib/users';
+
+type StudentPerformance = {
+  name: string;
+  lastScore: number;
+  status: "On Track" | "Needs Help";
+}
+
   export default function TeacherDashboardPage() {
     const { t } = useLanguage();
+    const [students, setStudents] = useState<StudentPerformance[]>([]);
+
+    useEffect(() => {
+        const allStudents = getStudents();
+        // Create placeholder performance data for now
+        const performanceData = allStudents.map((student, index) => {
+            const score = 80 - (index * 5); // Example score logic
+            return {
+                name: student.username,
+                lastScore: score,
+                status: score >= 70 ? "On Track" : "Needs Help" as "On Track" | "Needs Help",
+            }
+        });
+        setStudents(performanceData);
+    }, []);
 
     const pageText = {
         title: {
@@ -58,7 +75,7 @@ import { useLanguage } from "@/contexts/language-context";
         subjectPerf: { en: "Subject Performance: Physics", hi: "विषय प्रदर्शन: भौतिकी", te: "విషయ పనితీరు: భౌతికశాస్త్రం" },
         subjectPerfDesc: { en: "Student scores in recent Physics missions.", hi: "हाल के भौतिकी मिशनों में छात्रों के स्कोर।", te: "ఇటీవలి భౌతికశాస్త్ర మిషన్లలో విద్యార్థుల స్కోర్లు." },
         studentProgress: { en: "Student Progress", hi: "छात्र प्रगति", te: "విద్యార్థి పురోగతి" },
-        studentProgressDesc: { en: "Recent performance of students who might need help.", hi: "जिन छात्रों को मदद की आवश्यकता हो सकती है उनका हालिया प्रदर्शन।", te: "సహాయం అవసరమైన విద్యార్థుల ఇటీవలి పనితీరు." },
+        studentProgressDesc: { en: "Recent performance of all registered students.", hi: "सभी पंजीकृत छात्रों का हालिया प्रदर्शन।", te: "నమోదైన విద్యార్థులందరి ఇటీవలి పనితీరు." },
         student: { en: "Student", hi: "छात्र", te: "విద్యార్థి" },
         lastScore: { en: "Last Score", hi: "अंतिम स्कोर", te: "చివరి స్కోరు" },
         status: { en: "Status", hi: "स्थिति", te: "స్థితి" },
