@@ -1,6 +1,8 @@
 
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     Card,
     CardContent,
@@ -19,6 +21,7 @@ import {
   import { Badge } from "@/components/ui/badge";
   import { Trophy, User, Users, Microscope, Atom, TestTube, Calculator, Sparkles, BookCheck } from "lucide-react";
   import { useLanguage } from "@/contexts/language-context";
+import { cn } from "@/lib/utils";
   
   const leaderboardData = [
     { rank: 1, team: "Cosmic Coders", score: 12500, players: ["Aarav", "Priya"] },
@@ -27,8 +30,26 @@ import {
     { rank: 4, team: "Physics Phenoms", score: 8200, players: ["Meera", "Karan"] },
   ];
   
+  type Mode = 'solo' | 'team';
+  type Arena = 'physics' | 'chemistry' | 'biology' | 'mathematics' | 'mega';
+
   export default function CompetitionPage() {
     const { t } = useLanguage();
+    const router = useRouter();
+    const [selectedMode, setSelectedMode] = useState<Mode | null>(null);
+
+    const handleModeSelect = (mode: Mode) => {
+        setSelectedMode(mode);
+    }
+
+    const handleArenaSelect = (arena: Arena) => {
+        if (selectedMode) {
+            router.push(`/competition/${selectedMode}/${arena}`);
+        } else {
+            // Optional: Add a toast or alert to select a mode first
+            alert("Please select a mode first!");
+        }
+    }
 
     const pageText = {
         title: {
@@ -103,7 +124,13 @@ import {
         <div className="space-y-4">
             <h2 className="text-2xl font-headline font-bold">{t('chooseMode', pageText)}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <Card 
+                    className={cn(
+                        "hover:shadow-lg transition-shadow cursor-pointer",
+                        selectedMode === 'solo' && 'ring-2 ring-primary'
+                    )}
+                    onClick={() => handleModeSelect('solo')}
+                >
                     <CardHeader className="flex flex-row items-center gap-4">
                         <User className="w-10 h-10 text-primary" />
                         <div>
@@ -112,7 +139,13 @@ import {
                         </div>
                     </CardHeader>
                 </Card>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <Card 
+                    className={cn(
+                        "hover:shadow-lg transition-shadow cursor-pointer",
+                        selectedMode === 'team' && 'ring-2 ring-primary'
+                    )}
+                    onClick={() => handleModeSelect('team')}
+                >
                     <CardHeader className="flex flex-row items-center gap-4">
                         <Users className="w-10 h-10 text-primary" />
                         <div>
@@ -128,31 +161,31 @@ import {
         <div className="space-y-4">
             <h2 className="text-2xl font-headline font-bold">{t('selectArena', pageText)}</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer">
+                <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('physics')}>
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
                         <Atom className="w-10 h-10 text-blue-500"/>
                         <p className="font-semibold">{t('physics', pageText)}</p>
                     </CardContent>
                 </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer">
+                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('chemistry')}>
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
                         <TestTube className="w-10 h-10 text-purple-500"/>
                         <p className="font-semibold">{t('chemistry', pageText)}</p>
                     </CardContent>
                 </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer">
+                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('biology')}>
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
                         <Microscope className="w-10 h-10 text-green-500"/>
                         <p className="font-semibold">{t('biology', pageText)}</p>
                     </CardContent>
                 </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer">
+                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleArenaSelect('mathematics')}>
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
                         <Calculator className="w-10 h-10 text-orange-500"/>
                         <p className="font-semibold">{t('math', pageText)}</p>
                     </CardContent>
                 </Card>
-                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer col-span-2 md:col-span-1 lg:col-span-1">
+                 <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer col-span-2 md:col-span-1 lg:col-span-1" onClick={() => handleArenaSelect('mega')}>
                     <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
                         <Sparkles className="w-10 h-10 text-yellow-500"/>
                         <p className="font-semibold">{t('megaStem', pageText)}</p>
@@ -237,3 +270,5 @@ import {
       </div>
     );
   }
+
+    
