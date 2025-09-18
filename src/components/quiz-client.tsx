@@ -204,33 +204,32 @@ export function QuizClient({ mission }: { mission: Mission }) {
 
     // Default multiple-choice interface
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {currentQuestion.options?.map((option) => (
-          <Button
-            key={option.id}
-            variant="outline"
-            size="lg"
-            className={cn(
-              "h-auto justify-start text-left whitespace-normal py-4",
-              selectedAnswer === option.id &&
-                "ring-2 ring-primary ring-offset-2",
-              showFeedback &&
-                option.id === currentQuestion.correctAnswer &&
-                "bg-green-100 border-green-400 text-green-900",
-              showFeedback &&
-                selectedAnswer === option.id &&
-                selectedAnswer !== currentQuestion.correctAnswer &&
-                "bg-red-100 border-red-400 text-red-900"
-            )}
-            onClick={() => !showFeedback && setSelectedAnswer(option.id)}
-            disabled={showFeedback}
-          >
-            <span className="mr-4 font-bold text-accent">{option.id.toUpperCase()}.</span>
-            <span>{t('text', option)}</span>
-          </Button>
-        ))}
-      </div>
-    );
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {currentQuestion.options?.map((option) => {
+            const isSelected = selectedAnswer === option.id;
+            const isCorrect = option.id === currentQuestion.correctAnswer;
+  
+            return (
+              <Button
+                key={option.id}
+                variant="outline"
+                size="lg"
+                className={cn(
+                  "h-auto justify-start text-left whitespace-normal py-4",
+                  isSelected && !showFeedback && "ring-2 ring-primary ring-offset-2",
+                  showFeedback && isCorrect && "bg-green-100 border-green-400 text-green-900 hover:bg-green-100",
+                  showFeedback && isSelected && !isCorrect && "bg-red-100 border-red-400 text-red-900 hover:bg-red-100"
+                )}
+                onClick={() => !showFeedback && setSelectedAnswer(option.id)}
+                disabled={showFeedback}
+              >
+                <span className="mr-4 font-bold text-accent">{option.id.toUpperCase()}.</span>
+                <span>{t('text', option)}</span>
+              </Button>
+            );
+          })}
+        </div>
+      );
   }
 
   return (
@@ -275,8 +274,8 @@ export function QuizClient({ mission }: { mission: Mission }) {
           
           {showFeedback ? (
             <div className="flex items-center gap-4">
-                {answerState === 'correct' && <Alert variant="default" className="p-2 border-green-500 bg-green-50"><CheckCircle2 className="text-green-500 h-5 w-5 mr-2" /><AlertDescription className="text-green-700 font-semibold">Correct!</AlertDescription></Alert>}
-                {answerState === 'incorrect' && <Alert variant="destructive" className="p-2 bg-red-50"><XCircle className="h-5 w-5 mr-2" /><AlertDescription className="font-semibold">Not quite, try again next time!</AlertDescription></Alert>}
+                {answerState === 'correct' && <Alert variant="default" className="p-2 border-green-500 bg-green-50 text-green-700 font-semibold"><CheckCircle2 className="h-5 w-5 mr-2" />Correct!</Alert>}
+                {answerState === 'incorrect' && <Alert variant="destructive" className="p-2 bg-red-50 font-semibold"><XCircle className="h-5 w-5 mr-2" />Not quite, but good try!</Alert>}
                 <Button onClick={handleNext} disabled={isPending}>
                   {currentQuestionIndex === questions.length - 1 ? 'Finish Mission' : 'Next Question'}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -300,5 +299,3 @@ export function QuizClient({ mission }: { mission: Mission }) {
     </div>
   );
 }
-
-    
