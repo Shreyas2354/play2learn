@@ -80,7 +80,7 @@ export default function LoginPage() {
                 {t('description', pageText)}
             </CardDescription>
             </CardHeader>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleLogin} autoComplete="off">
             <CardContent className="grid gap-4">
                 <div className="grid gap-2">
                 <Label htmlFor="username">{t('usernameLabel', pageText)}</Label>
@@ -90,6 +90,7 @@ export default function LoginPage() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    autoComplete="off"
                 />
                 </div>
                 <div className="grid gap-2">
@@ -100,6 +101,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    autoComplete="new-password"
                 />
                 </div>
             </CardContent>
