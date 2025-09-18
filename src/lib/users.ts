@@ -10,17 +10,30 @@ export type User = {
   level?: number;
 };
 
-// Helper function to get users from localStorage
+const defaultUsers = {
+    'student': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
+    'teacher': { password: 'password', role: 'teacher' },
+    'shreays': { password: 'password', role: 'student', points: 0, badges: [], level: 1 },
+};
+
+// Helper function to initialize and get users from localStorage
 function getUsers() {
   if (typeof window === 'undefined') {
     return {};
   }
   try {
-    const users = localStorage.getItem('users');
-    return users ? JSON.parse(users) : {};
+    let users = localStorage.getItem('users');
+    if (!users) {
+      // If no users exist, initialize with default users
+      localStorage.setItem('users', JSON.stringify(defaultUsers));
+      users = JSON.stringify(defaultUsers);
+    }
+    return JSON.parse(users);
   } catch (error) {
     console.error("Failed to parse users from localStorage", error);
-    return {};
+    // If parsing fails, reset to default
+    localStorage.setItem('users', JSON.stringify(defaultUsers));
+    return defaultUsers;
   }
 }
 
@@ -36,10 +49,6 @@ function saveUsers(users: any) {
 
 // Signup function
 export function signup(username: string, password: string, role: 'student' | 'teacher'): User {
-  if (typeof window === 'undefined') {
-    // This case should ideally not be hit if called from a client component form
-    throw new Error('Signup can only be performed on the client.');
-  }
   const users = getUsers();
 
   if (users[username]) {
@@ -65,9 +74,6 @@ export function signup(username: string, password: string, role: 'student' | 'te
 
 // Login function
 export function login(username: string, password: string): User | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
   const users = getUsers();
   const user = users[username];
 
@@ -102,9 +108,6 @@ export function getCurrentUser(): User | null {
 
 // Get all students for the teacher dashboard
 export function getStudents(): User[] {
-  if (typeof window === 'undefined') {
-    return [];
-  }
   const users = getUsers();
   const students: User[] = [];
   for (const username in users) {
