@@ -1,11 +1,11 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/language-context";
-import { PlusCircle, Upload, X } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,8 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function ManageContentPage() {
     const { t } = useLanguage();
     const { toast } = useToast();
-    const [missions, setMissions] = useState<Mission[]>([]);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isMissionDialogOpen, setIsMissionDialogOpen] = useState(false);
     
     // New Mission State
     const [newMission, setNewMission] = useState<Partial<Mission>>({
@@ -31,15 +30,6 @@ export default function ManageContentPage() {
         type: 'mcq'
     });
 
-    useEffect(() => {
-        const storedMissions = localStorage.getItem('missions');
-        if (storedMissions) {
-            setMissions(JSON.parse(storedMissions));
-        } else {
-            setMissions(initialMissions);
-        }
-    }, []);
-
     const handleSaveNewMission = () => {
         if (!newMission.title || !newMission.subject || (newMission.questions && newMission.questions.length === 0)) {
             toast({
@@ -50,6 +40,9 @@ export default function ManageContentPage() {
             return;
         }
 
+        const storedMissionsStr = localStorage.getItem('missions');
+        const storedMissions = storedMissionsStr ? JSON.parse(storedMissionsStr) : initialMissions;
+
         const missionToSave: Mission = {
             id: `custom-${newMission.subject}-${Date.now()}`,
             badgeId: `custom-badge-${newMission.subject}`,
@@ -58,10 +51,10 @@ export default function ManageContentPage() {
             ...newMission,
         } as Mission;
         
-        const updatedMissions = [...missions, missionToSave];
+        const updatedMissions = [...storedMissions, missionToSave];
         localStorage.setItem('missions', JSON.stringify(updatedMissions));
-        setMissions(updatedMissions);
-        setIsDialogOpen(false);
+        
+        setIsMissionDialogOpen(false);
         setNewMission({ subject: 'physics', questions: [] }); // Reset form
         toast({
             title: "Success",
@@ -94,8 +87,12 @@ export default function ManageContentPage() {
     const pageText = {
         title: { en: "Manage Learning Content", hi: "शिक्षण सामग्री प्रबंधित करें", te: "అభ్యాస కంటెంట్‌ను నిర్వహించండి" },
         description: { en: "Add, edit, or remove missions and questions directly in your browser.", hi: "सीधे अपने ब्राउज़र में मिशन और प्रश्न जोड़ें, संपादित करें या हटाएं।", te: "మీ బ్రౌజర్‌లో నేరుగా మిషన్లు మరియు ప్రశ్నలను జోడించండి, సవరించండి లేదా తీసివేయండి." },
-        currentMissions: { en: "Current Missions", hi: "वर्तमान मिशन", te: "ప్రస్తుత మిషన్లు" },
+        manageMissions: { en: "Manage Missions", hi: "मिशन प्रबंधित करें", te: "మిషన్లను నిర్వహించండి" },
+        manageMissionsDesc: { en: "Create new learning missions for students.", hi: "छात्रों के लिए नए शिक्षण मिशन बनाएं।", te: "విద్యార్థుల కోసం కొత్త అభ్యాస మిషన్లను సృష్టించండి." },
         addNewMission: { en: "Add New Mission", hi: "नया मिशन जोड़ें", te: "కొత్త మిషన్‌ను జోడించండి" },
+        manageCompetitions: { en: "Manage Competitions", hi: "प्रतियोगिताएं प्रबंधित करें", te: "పోటీలను నిర్వహించండి" },
+        manageCompetitionsDesc: { en: "Add new questions to the competition pool.", hi: "प्रतियोगिता पूल में नए प्रश्न जोड़ें।", te: "పోటీ పూల్‌కు కొత్త ప్రశ్నలను జోడించండి." },
+        addCompetitionQuestion: { en: "Add Competition Question", hi: "प्रतियोगिता प्रश्न जोड़ें", te: "పోటీ ప్రశ్నను జోడించండి" },
         missionTitle: { en: "Mission Title", hi: "मिशन शीर्षक", te: "మిషన్ శీర్షిక" },
         missionDesc: { en: "Mission Description", hi: "मिशन विवरण", te: "మిషన్ వివరణ" },
         subject: { en: "Subject", hi: "विषय", te: "విషయం" },
@@ -115,26 +112,32 @@ export default function ManageContentPage() {
                 <p className="text-muted-foreground">{t('description', pageText)}</p>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <div className="flex justify-between items-center">
-                        <CardTitle>{t('currentMissions', pageText)}</CardTitle>
-                        <Button onClick={() => setIsDialogOpen(true)}>
+            <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{t('manageMissions', pageText)}</CardTitle>
+                        <CardDescription>{t('manageMissionsDesc', pageText)}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Button onClick={() => setIsMissionDialogOpen(true)} className="w-full">
                             <PlusCircle className="mr-2 h-4 w-4" /> {t('addNewMission', pageText)}
                         </Button>
-                    </div>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                    {missions.map(mission => (
-                        <div key={mission.id} className="p-3 border rounded-md bg-muted/50">
-                           <p className="font-semibold">{t('title', mission)} ({t('title', subjects.find(s => s.id === mission.subject))})</p>
-                           <p className="text-sm text-muted-foreground">{mission.questions.length} {t('questions', pageText)}</p>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>{t('manageCompetitions', pageText)}</CardTitle>
+                        <CardDescription>{t('manageCompetitionsDesc', pageText)}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Button className="w-full" disabled>
+                             <PlusCircle className="mr-2 h-4 w-4" /> {t('addCompetitionQuestion', pageText)}
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog open={isMissionDialogOpen} onOpenChange={setIsMissionDialogOpen}>
                 <DialogContent className="sm:max-w-[600px]">
                     <DialogHeader>
                         <DialogTitle>{t('addNewMission', pageText)}</DialogTitle>
@@ -182,7 +185,7 @@ export default function ManageContentPage() {
                             {newQuestion.options?.map((option, index) => (
                                 <div key={index} className="space-y-2">
                                     <Label>{t('option', pageText)} {option.id.toUpperCase()}</Label>
-                                    <Input value={option.text} onChange={e => {
+                                    <Input value={option.text || ''} onChange={e => {
                                         const updatedOptions = [...(newQuestion.options || [])];
                                         updatedOptions[index].text = e.target.value;
                                         setNewQuestion({...newQuestion, options: updatedOptions});
@@ -207,7 +210,7 @@ export default function ManageContentPage() {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>{t('cancel', pageText)}</Button>
+                        <Button variant="ghost" onClick={() => setIsMissionDialogOpen(false)}>{t('cancel', pageText)}</Button>
                         <Button onClick={handleSaveNewMission}>{t('saveMission', pageText)}</Button>
                     </DialogFooter>
                 </DialogContent>
