@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/users';
 import {
@@ -17,25 +17,29 @@ import { Icons } from '@/components/icons';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  
+  const [isChecking, setIsChecking] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     const user = getCurrentUser();
     if (!user) {
       router.push('/login');
+    } else {
+      setIsLoggedIn(true);
     }
+    setIsChecking(false);
   }, [router]);
 
-  // While checking for user, you might want to show a loader
-  if (!getCurrentUser()) {
+  if (isChecking || !isLoggedIn) {
     return (
-        <div className="flex items-center justify-center h-screen">
-            <div>Loading...</div>
-        </div>
+      <div className="flex items-center justify-center h-screen">
+        <div>Loading...</div>
+      </div>
     );
   }
 
   return (
-     <SidebarProvider>
+    <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4">
           <a
