@@ -22,21 +22,28 @@ function getUsers() {
   if (typeof window === 'undefined') {
     return {};
   }
+  
+  let users = {};
   try {
     const usersStr = localStorage.getItem('users');
     if (usersStr) {
-      return JSON.parse(usersStr);
+      users = JSON.parse(usersStr);
+      // Ensure it's a valid object, not null or malformed
+      if (typeof users !== 'object' || users === null) {
+        throw new Error("Invalid user data in localStorage");
+      }
     } else {
-      // If no users exist, initialize with default users and return them.
+      // If no users exist in storage, initialize with default users.
       localStorage.setItem('users', JSON.stringify(defaultUsers));
       return defaultUsers;
     }
   } catch (error) {
-    console.error("Failed to parse users from localStorage", error);
-    // If parsing fails, reset to default to prevent app crash
-    localStorage.setItem('users', JSON.stringify(defaultUsers));
+    console.error("Failed to get/parse users from localStorage:", error);
+    // On failure, return the default users without overwriting what's in storage.
+    // This prevents accidental data deletion on a temporary parsing error.
     return defaultUsers;
   }
+  return users;
 }
 
 // Helper function to save users to localStorage
@@ -53,7 +60,7 @@ function saveUsers(users: any) {
 export function signup(username: string, password: string, role: 'student' | 'teacher'): User {
   const users = getUsers();
 
-  if (users[username]) {
+  if (users[username as keyof typeof users]) {
     throw new Error('Username already exists. Try another one.');
   }
 
@@ -68,7 +75,7 @@ export function signup(username: string, password: string, role: 'student' | 'te
     newUser.level = 1;
   }
 
-  users[username] = newUser;
+  (users as any)[username] = newUser;
   saveUsers(users);
 
   return { username, role };
@@ -77,7 +84,7 @@ export function signup(username: string, password: string, role: 'student' | 'te
 // Login function
 export function login(username: string, password: string): User | null {
   const users = getUsers();
-  const user = users[username];
+  const user = (users as any)[username];
 
   if (user && user.password === password) {
     const currentUser: User = { username, role: user.role };
@@ -115,11 +122,12 @@ export function getStudents(): User[] {
   const users = getUsers();
   const students: User[] = [];
   for (const username in users) {
-    if (users[username].role === 'student') {
+    const user = (users as any)[username];
+    if (user.role === 'student') {
       students.push({
         username,
         role: 'student',
-        ...users[username]
+        ...user
       });
     }
   }

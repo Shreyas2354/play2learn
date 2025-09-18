@@ -115,6 +115,28 @@ export function MainNav() {
           );
         })}
       </ul>
+       <div className="mt-auto p-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 justify-start group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:justify-center"
+            >
+              <LogOut className="h-5 w-5 shrink-0" />
+              <span className="group-data-[collapsible=icon]:hidden">
+                {t('logout', navText)}
+              </span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent
+            side="right"
+            className="hidden group-data-[collapsible=icon]:block"
+          >
+            {t('logout', navText)}
+          </TooltipContent>
+        </Tooltip>
+      </div>
     </nav>
   );
 }
