@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { login } from '@/lib/users';
@@ -27,6 +27,11 @@ export default function LoginPage() {
   const [username, setUsername] = useState('shreyas');
   const [password, setPassword] = useState('123456');
   const [isLoading, setIsLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const pageText = {
     title: { en: "Login", hi: "लॉग इन करें", te: "లాగిన్" },
@@ -66,6 +71,10 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+  
+  if (!isClient) {
+    return null; // or a loading skeleton
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
@@ -80,7 +89,7 @@ export default function LoginPage() {
                 {t('description', pageText)}
             </CardDescription>
             </CardHeader>
-            <form onSubmit={handleLogin} autoComplete="off">
+            <form onSubmit={handleLogin}>
             <CardContent className="grid gap-4">
                 <div className="grid gap-2">
                 <Label htmlFor="username">{t('usernameLabel', pageText)}</Label>
