@@ -6,6 +6,14 @@ import { useRouter } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -28,6 +36,7 @@ export function SiteHeader() {
   const { t, setLanguage } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [profilePic, setProfilePic] = useState<string | null>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -66,87 +75,137 @@ export function SiteHeader() {
   };
   
   const headerText = {
+    profile: { en: "Profile", hi: "प्रोफ़ाइल", te: "ప్రొఫైల్" },
     logout: { en: "Logout", hi: "लॉग आउट", te: "లాగ్అవుట్" },
     language: { en: "Language", hi: "भाषा", te: "భాష" },
     uploadPhoto: { en: "Upload Photo", hi: "फ़ोटो अपलोड करें", te: "ఫోటోను అప్‌లోడ్ చేయండి" },
     removePhoto: { en: "Remove Photo", hi: "फ़ोटो हटाएं", te: "ఫోటోను తీసివేయండి" },
+    studentDetails: { en: "Student Details", hi: "छात्र विवरण", te: "విద్యార్థి వివరాలు" },
+    studentName: { en: "Student Name", hi: "छात्र का नाम", te: "విద్యార్థి పేరు" },
+    area: { en: "Area", hi: "क्षेत्र", te: "ప్రాంతం" },
+    fatherName: { en: "Father's Name", hi: "पिता का नाम", te: "తండ్రి పేరు" },
+    motherName: { en: "Mother's Name", hi: "माता का नाम", te: "తల్లి పేరు" },
+    contact: { en: "Contact", hi: "संपर्क", te: "సంప్రదించండి" },
+    close: { en: "Close", hi: "बंद करें", te: "మూసివేయండి" },
   }
 
   return (
-    <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm">
-      <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="md:hidden">
-          <SidebarTrigger />
-        </div>
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          {user && (
-             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-9 w-9">
-                     {profilePic && <AvatarImage src={profilePic} alt={user.username} />}
-                     <AvatarFallback>
-                      {user.username.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.username}</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {user.role}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
-                  <Camera className="mr-2 h-4 w-4" />
-                  <span>{t('uploadPhoto', headerText)}</span>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handlePictureUpload}
-                    className="hidden"
-                    accept="image/png, image/jpeg"
-                  />
-                </DropdownMenuItem>
-                {profilePic && (
-                  <DropdownMenuItem onSelect={handleRemovePhoto}>
-                    <UserIcon className="mr-2 h-4 w-4" />
-                    <span>{t('removePhoto', headerText)}</span>
+    <>
+      <header className="sticky top-0 z-10 w-full bg-background/80 backdrop-blur-sm">
+        <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="md:hidden">
+            <SidebarTrigger />
+          </div>
+          <div className="flex flex-1 items-center justify-end space-x-4">
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      {profilePic && <AvatarImage src={profilePic} alt={user.username} />}
+                      <AvatarFallback>
+                        {user.username.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.username}</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.role}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={() => setIsProfileOpen(true)}>
+                     <UserIcon className="mr-2 h-4 w-4" />
+                    <span>{t('profile', headerText)}</span>
                   </DropdownMenuItem>
-                )}
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <Languages className="mr-2 h-4 w-4" />
-                    <span>{t('language', headerText)}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem onClick={() => setLanguage("en")}>
-                        English
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setLanguage("hi")}>
-                        हिन्दी (Hindi)
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setLanguage("te")}>
-                        తెలుగు (Telugu)
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>{t('logout', headerText)}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+                  <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
+                    <Camera className="mr-2 h-4 w-4" />
+                    <span>{t('uploadPhoto', headerText)}</span>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handlePictureUpload}
+                      className="hidden"
+                      accept="image/png, image/jpeg"
+                    />
+                  </DropdownMenuItem>
+                  {profilePic && (
+                    <DropdownMenuItem onSelect={handleRemovePhoto}>
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      <span>{t('removePhoto', headerText)}</span>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <Languages className="mr-2 h-4 w-4" />
+                      <span>{t('language', headerText)}</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuItem onClick={() => setLanguage("en")}>
+                          English
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setLanguage("hi")}>
+                          हिन्दी (Hindi)
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setLanguage("te")}>
+                          తెలుగు (Telugu)
+                        </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>{t('logout', headerText)}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('studentDetails', headerText)}</DialogTitle>
+            <DialogDescription>
+              This is your profile information.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <span className="text-right font-semibold">{t('studentName', headerText)}</span>
+              <span className="col-span-3">{user?.username || 'N/A'}</span>
+            </div>
+             <div className="grid grid-cols-4 items-center gap-4">
+              <span className="text-right font-semibold">{t('area', headerText)}</span>
+              <span className="col-span-3">Placeholder Area</span>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <span className="text-right font-semibold">{t('fatherName', headerText)}</span>
+              <span className="col-span-3">Placeholder Father's Name</span>
+            </div>
+             <div className="grid grid-cols-4 items-center gap-4">
+              <span className="text-right font-semibold">{t('motherName', headerText)}</span>
+              <span className="col-span-3">Placeholder Mother's Name</span>
+            </div>
+             <div className="grid grid-cols-4 items-center gap-4">
+              <span className="text-right font-semibold">{t('contact', headerText)}</span>
+              <span className="col-span-3">+91 12345 67890</span>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsProfileOpen(false)}>{t('close', headerText)}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
