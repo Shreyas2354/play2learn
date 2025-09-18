@@ -11,6 +11,7 @@ import {
   Users,
   BarChart3,
   LogOut,
+  Trophy,
 } from "lucide-react";
 import { getCurrentUser, logout } from "@/lib/users";
 import type { User } from "@/lib/users";
@@ -51,7 +52,7 @@ export function MainNav() {
       dashboard: { en: "Dashboard", hi: "डैशबोर्ड", te: "డాష్‌బోర్డ్" },
       missions: { en: "Missions", hi: "मिशन", te: "మిషన్లు" },
       experiments: { en: "Experiments", hi: "प्रयोग", te: "ప్రయోగాలు" },
-      multiplayer: { en: "Multiplayer", hi: "मल्टीप्लेयर", te: "మల్టీప్లేయర్" },
+      competition: { en: "Competition", hi: "प्रतियोगिता", te: "పోటీ" },
       teacherDashboard: { en: "Teacher Dashboard", hi: "शिक्षक डैशबोर्ड", te: "ఉపాధ్యాయ డాష్‌బోర్డ్" },
       logout: { en: "Logout", hi: "लॉग आउट", te: "లాగ్అవుట్" },
   }
@@ -60,7 +61,7 @@ export function MainNav() {
     { href: "/", label: t('dashboard', navText), icon: LayoutDashboard, role: ['student', 'teacher'] },
     { href: "/missions", label: t('missions', navText), icon: Rocket, role: ['student', 'teacher'] },
     { href: "/experiments", label: t('experiments', navText), icon: FlaskConical, role: ['student', 'teacher'] },
-    { href: "/multiplayer", label: t('multiplayer', navText), icon: Users, role: ['student', 'teacher'] },
+    { href: "/competition", label: t('competition', navText), icon: Trophy, role: ['student', 'teacher'] },
     { href: "/teacher-dashboard", label: t('teacherDashboard', navText), icon: BarChart3, role: ['teacher'] },
   ];
 
