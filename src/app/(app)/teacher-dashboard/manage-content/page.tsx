@@ -178,75 +178,77 @@ export default function ManageContentPage() {
 
             {/* Add Mission Dialog */}
             <Dialog open={isMissionDialogOpen} onOpenChange={setIsMissionDialogOpen}>
-                <DialogContent className="sm:max-w-[600px]">
+                <DialogContent className="sm:max-w-[600px] flex flex-col">
                     <DialogHeader>
                         <DialogTitle>{t('addNewMission', pageText)}</DialogTitle>
                         <DialogDescription>Create a new mission with questions. It will be saved on this device.</DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
-                        {/* Mission Details */}
-                        <div className="space-y-2">
-                            <Label htmlFor="title">{t('missionTitle', pageText)}</Label>
-                            <Input id="title" value={newMission.title || ''} onChange={e => setNewMission({...newMission, title: e.target.value})} />
-                        </div>
-                         <div className="space-y-2">
-                            <Label htmlFor="description">{t('missionDesc', pageText)}</Label>
-                            <Input id="description" value={newMission.description || ''} onChange={e => setNewMission({...newMission, description: e.target.value})} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="subject">{t('subject', pageText)}</Label>
-                             <Select value={newMission.subject} onValueChange={(value) => setNewMission({...newMission, subject: value as Mission['subject']})}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a subject" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {subjects.map(s => <SelectItem key={s.id} value={s.id}>{t('title', s)}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <hr className="my-4" />
-                        {/* Added Questions List */}
-                        <h3 className="font-semibold">{t('questions', pageText)} ({newMission.questions?.length || 0})</h3>
-                        <div className="space-y-2">
-                            {newMission.questions?.map((q, index) => (
-                                <div key={index} className="p-2 border rounded-md text-sm">
-                                    <p><strong>Q:</strong> {q.text}</p>
-                                    <p className="text-green-600"><strong>Ans:</strong> {q.options?.find(o => o.id === q.correctAnswer)?.text}</p>
-                                </div>
-                            ))}
-                        </div>
-                        {/* Add New Question Form */}
-                        <div className="p-4 border-2 border-dashed rounded-lg space-y-4">
-                             <h4 className="font-semibold">{t('addQuestion', pageText)}</h4>
+                    <div className="overflow-y-auto max-h-[60vh] p-4 -m-4">
+                        <div className="grid gap-4 py-4">
+                            {/* Mission Details */}
                             <div className="space-y-2">
-                                <Label>{t('questionText', pageText)}</Label>
-                                <Textarea value={newQuestion.text || ''} onChange={e => setNewQuestion({...newQuestion, text: e.target.value})} />
+                                <Label htmlFor="title">{t('missionTitle', pageText)}</Label>
+                                <Input id="title" value={newMission.title || ''} onChange={e => setNewMission({...newMission, title: e.target.value})} />
                             </div>
-                            {newQuestion.options?.map((option, index) => (
-                                <div key={index} className="space-y-2">
-                                    <Label>{t('option', pageText)} {option.id.toUpperCase()}</Label>
-                                    <Input value={option.text || ''} onChange={e => {
-                                        const updatedOptions = [...(newQuestion.options || [])];
-                                        updatedOptions[index].text = e.target.value;
-                                        setNewQuestion({...newQuestion, options: updatedOptions});
-                                    }}/>
-                                </div>
-                            ))}
                             <div className="space-y-2">
-                                <Label>{t('correctAnswer', pageText)}</Label>
-                                <Select value={newQuestion.correctAnswer} onValueChange={value => setNewQuestion({...newQuestion, correctAnswer: value})}>
+                                <Label htmlFor="description">{t('missionDesc', pageText)}</Label>
+                                <Input id="description" value={newMission.description || ''} onChange={e => setNewMission({...newMission, description: e.target.value})} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="subject">{t('subject', pageText)}</Label>
+                                <Select value={newMission.subject} onValueChange={(value) => setNewMission({...newMission, subject: value as Mission['subject']})}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select correct option" />
+                                        <SelectValue placeholder="Select a subject" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="a">Option A</SelectItem>
-                                        <SelectItem value="b">Option B</SelectItem>
-                                        <SelectItem value="c">Option C</SelectItem>
-                                        <SelectItem value="d">Option D</SelectItem>
+                                        {subjects.map(s => <SelectItem key={s.id} value={s.id}>{t('title', s)}</SelectItem>)}
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <Button variant="outline" onClick={handleAddQuestionToMission}>{t('addQuestion', pageText)}</Button>
+                            <hr className="my-4" />
+                            {/* Added Questions List */}
+                            <h3 className="font-semibold">{t('questions', pageText)} ({newMission.questions?.length || 0})</h3>
+                            <div className="space-y-2">
+                                {newMission.questions?.map((q, index) => (
+                                    <div key={index} className="p-2 border rounded-md text-sm">
+                                        <p><strong>Q:</strong> {q.text}</p>
+                                        <p className="text-green-600"><strong>Ans:</strong> {q.options?.find(o => o.id === q.correctAnswer)?.text}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            {/* Add New Question Form */}
+                            <div className="p-4 border-2 border-dashed rounded-lg space-y-4">
+                                <h4 className="font-semibold">{t('addQuestion', pageText)}</h4>
+                                <div className="space-y-2">
+                                    <Label>{t('questionText', pageText)}</Label>
+                                    <Textarea value={newQuestion.text || ''} onChange={e => setNewQuestion({...newQuestion, text: e.target.value})} />
+                                </div>
+                                {newQuestion.options?.map((option, index) => (
+                                    <div key={index} className="space-y-2">
+                                        <Label>{t('option', pageText)} {option.id.toUpperCase()}</Label>
+                                        <Input value={option.text || ''} onChange={e => {
+                                            const updatedOptions = [...(newQuestion.options || [])];
+                                            updatedOptions[index].text = e.target.value;
+                                            setNewQuestion({...newQuestion, options: updatedOptions});
+                                        }}/>
+                                    </div>
+                                ))}
+                                <div className="space-y-2">
+                                    <Label>{t('correctAnswer', pageText)}</Label>
+                                    <Select value={newQuestion.correctAnswer} onValueChange={value => setNewQuestion({...newQuestion, correctAnswer: value})}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select correct option" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="a">Option A</SelectItem>
+                                            <SelectItem value="b">Option B</SelectItem>
+                                            <SelectItem value="c">Option C</SelectItem>
+                                            <SelectItem value="d">Option D</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <Button variant="outline" onClick={handleAddQuestionToMission}>{t('addQuestion', pageText)}</Button>
+                            </div>
                         </div>
                     </div>
                     <DialogFooter>
@@ -258,51 +260,53 @@ export default function ManageContentPage() {
 
              {/* Add Competition Question Dialog */}
             <Dialog open={isCompetitionDialogOpen} onOpenChange={setIsCompetitionDialogOpen}>
-                <DialogContent className="sm:max-w-[600px]">
+                <DialogContent className="sm:max-w-[600px] flex flex-col">
                     <DialogHeader>
                         <DialogTitle>{t('addCompetitionQuestion', pageText)}</DialogTitle>
                         <DialogDescription>Create a new question for the competition pool. It will be saved locally.</DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="space-y-2">
-                            <Label>{t('subject', pageText)}</Label>
-                             <Select value={newCompetitionQuestion.subject} onValueChange={(value) => setNewCompetitionQuestion({...newCompetitionQuestion, subject: value as Question['subject']})}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a subject" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {subjects.filter(s => s.id !== 'english' && s.id !== 'gk').map(s => <SelectItem key={s.id} value={s.id}>{t('title', s)}</SelectItem>)}
-                                    <SelectItem value="mega">Mega STEM</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>{t('questionText', pageText)}</Label>
-                            <Textarea value={newCompetitionQuestion.text || ''} onChange={e => setNewCompetitionQuestion({...newCompetitionQuestion, text: e.target.value})} />
-                        </div>
-                        {newCompetitionQuestion.options?.map((option, index) => (
-                            <div key={index} className="space-y-2">
-                                <Label>{t('option', pageText)} {option.id.toUpperCase()}</Label>
-                                <Input value={option.text || ''} onChange={e => {
-                                    const updatedOptions = [...(newCompetitionQuestion.options || [])];
-                                    updatedOptions[index].text = e.target.value;
-                                    setNewCompetitionQuestion({...newCompetitionQuestion, options: updatedOptions});
-                                }}/>
+                    <div className="overflow-y-auto max-h-[60vh] p-4 -m-4">
+                        <div className="grid gap-4 py-4">
+                            <div className="space-y-2">
+                                <Label>{t('subject', pageText)}</Label>
+                                <Select value={newCompetitionQuestion.subject} onValueChange={(value) => setNewCompetitionQuestion({...newCompetitionQuestion, subject: value as Question['subject']})}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a subject" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {subjects.filter(s => s.id !== 'english' && s.id !== 'gk').map(s => <SelectItem key={s.id} value={s.id}>{t('title', s)}</SelectItem>)}
+                                        <SelectItem value="mega">Mega STEM</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
-                        ))}
-                         <div className="space-y-2">
-                            <Label>{t('correctAnswer', pageText)}</Label>
-                            <Select value={newCompetitionQuestion.correctAnswer} onValueChange={value => setNewCompetitionQuestion({...newCompetitionQuestion, correctAnswer: value})}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select correct option" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="a">Option A</SelectItem>
-                                    <SelectItem value="b">Option B</SelectItem>
-                                    <SelectItem value="c">Option C</SelectItem>
-                                    <SelectItem value="d">Option D</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <div className="space-y-2">
+                                <Label>{t('questionText', pageText)}</Label>
+                                <Textarea value={newCompetitionQuestion.text || ''} onChange={e => setNewCompetitionQuestion({...newCompetitionQuestion, text: e.target.value})} />
+                            </div>
+                            {newCompetitionQuestion.options?.map((option, index) => (
+                                <div key={index} className="space-y-2">
+                                    <Label>{t('option', pageText)} {option.id.toUpperCase()}</Label>
+                                    <Input value={option.text || ''} onChange={e => {
+                                        const updatedOptions = [...(newCompetitionQuestion.options || [])];
+                                        updatedOptions[index].text = e.target.value;
+                                        setNewCompetitionQuestion({...newCompetitionQuestion, options: updatedOptions});
+                                    }}/>
+                                </div>
+                            ))}
+                            <div className="space-y-2">
+                                <Label>{t('correctAnswer', pageText)}</Label>
+                                <Select value={newCompetitionQuestion.correctAnswer} onValueChange={value => setNewCompetitionQuestion({...newCompetitionQuestion, correctAnswer: value})}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select correct option" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="a">Option A</SelectItem>
+                                        <SelectItem value="b">Option B</SelectItem>
+                                        <SelectItem value="c">Option C</SelectItem>
+                                        <SelectItem value="d">Option D</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     </div>
                     <DialogFooter>
@@ -314,7 +318,3 @@ export default function ManageContentPage() {
         </div>
     );
 }
-
-    
-
-    
