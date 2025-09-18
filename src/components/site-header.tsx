@@ -19,7 +19,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -180,25 +179,25 @@ export function SiteHeader() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-[150px_1fr] items-center gap-4">
               <span className="text-right font-semibold">{t('studentName', headerText)}</span>
-              <span className="col-span-3">{user?.username || 'N/A'}</span>
+              <span>{user?.username || 'N/A'}</span>
             </div>
-             <div className="grid grid-cols-4 items-center gap-4">
+             <div className="grid grid-cols-[150px_1fr] items-center gap-4">
               <span className="text-right font-semibold">{t('area', headerText)}</span>
-              <span className="col-span-3">Placeholder Area</span>
+              <span>Placeholder Area</span>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-[150px_1fr] items-center gap-4">
               <span className="text-right font-semibold">{t('fatherName', headerText)}</span>
-              <span className="col-span-3">Placeholder Father's Name</span>
+              <span>Placeholder Father's Name</span>
             </div>
-             <div className="grid grid-cols-4 items-center gap-4">
+             <div className="grid grid-cols-[150px_1fr] items-center gap-4">
               <span className="text-right font-semibold">{t('motherName', headerText)}</span>
-              <span className="col-span-3">Placeholder Mother's Name</span>
+              <span>Placeholder Mother's Name</span>
             </div>
-             <div className="grid grid-cols-4 items-center gap-4">
+             <div className="grid grid-cols-[150px_1fr] items-center gap-4">
               <span className="text-right font-semibold">{t('contact', headerText)}</span>
-              <span className="col-span-3">+91 12345 67890</span>
+              <span>+91 12345 67890</span>
             </div>
           </div>
           <DialogFooter>

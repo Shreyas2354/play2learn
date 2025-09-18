@@ -15,18 +15,31 @@ function getUsers() {
   if (typeof window === 'undefined') {
     return {};
   }
-  const users = localStorage.getItem('users');
-  return users ? JSON.parse(users) : {};
+  try {
+    const users = localStorage.getItem('users');
+    return users ? JSON.parse(users) : {};
+  } catch (error) {
+    console.error("Failed to parse users from localStorage", error);
+    return {};
+  }
 }
 
 // Helper function to save users to localStorage
 function saveUsers(users: any) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('users', JSON.stringify(users));
+  try {
+    localStorage.setItem('users', JSON.stringify(users));
+  } catch (error) {
+    console.error("Failed to save users to localStorage", error);
+  }
 }
 
 // Signup function
 export function signup(username: string, password: string, role: 'student' | 'teacher'): User {
+  if (typeof window === 'undefined') {
+    // This case should ideally not be hit if called from a client component form
+    throw new Error('Signup can only be performed on the client.');
+  }
   const users = getUsers();
 
   if (users[username]) {
@@ -52,14 +65,15 @@ export function signup(username: string, password: string, role: 'student' | 'te
 
 // Login function
 export function login(username: string, password: string): User | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
   const users = getUsers();
   const user = users[username];
 
   if (user && user.password === password) {
     const currentUser: User = { username, role: user.role };
-    if (typeof window !== 'undefined') {
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    }
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
     return currentUser;
   }
 
@@ -77,12 +91,20 @@ export function getCurrentUser(): User | null {
     if (typeof window === 'undefined') {
         return null;
     }
-  const user = localStorage.getItem('currentUser');
-  return user ? JSON.parse(user) : null;
+    try {
+        const user = localStorage.getItem('currentUser');
+        return user ? JSON.parse(user) : null;
+    } catch (error) {
+        console.error("Failed to parse current user from localStorage", error);
+        return null;
+    }
 }
 
 // Get all students for the teacher dashboard
 export function getStudents(): User[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
   const users = getUsers();
   const students: User[] = [];
   for (const username in users) {
