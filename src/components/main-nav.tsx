@@ -111,30 +111,6 @@ export function MainNav() {
           );
         })}
       </ul>
-      <div className="mt-auto">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              onClick={handleLogout}
-              variant="ghost"
-              className={cn(
-                "flex items-center gap-3 rounded-md p-3 text-sm font-medium transition-colors group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:justify-center w-full justify-start hover:bg-destructive/80 hover:text-destructive-foreground"
-              )}
-            >
-              <LogOut className="h-5 w-5 shrink-0" />
-              <span className="group-data-[collapsible=icon]:hidden">
-                {t('logout', navText)}
-              </span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent
-            side="right"
-            className="hidden group-data-[collapsible=icon]:block"
-          >
-            {t('logout', navText)}
-          </TooltipContent>
-        </Tooltip>
-      </div>
     </nav>
   );
 }
