@@ -55,13 +55,16 @@ export default function ResultsPage() {
     ? subjectMissions[currentMissionIndex + 1]
     : null;
 
-  if (!isClient) {
-    return null; 
-  }
-
   const coinsEarned = score * 10;
   const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
   const isPerfectScore = score === total;
+
+  useEffect(() => {
+    if (isClient) {
+        // This logic depends on state derived from the first useEffect, so it needs its own effect or to be run after isClient is true.
+        // The component re-renders when score and total are set, so isPerfectScore will be correct.
+    }
+  }, [isClient, score, total]);
   
   const pageText = {
     missionComplete: {
@@ -151,6 +154,10 @@ export default function ResultsPage() {
     }
   }
 
+  if (!isClient) {
+    return null; 
+  }
+
   return (
     <div className="max-w-4xl mx-auto text-center space-y-8">
       <div className="animate-fade-in-down">
@@ -177,17 +184,19 @@ export default function ResultsPage() {
             <p className="text-5xl font-bold">{coinsEarned}</p>
           </CardContent>
         </Card>
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle>{t('badgeUnlocked', pageText)}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center gap-2">
-            <Badge variant="default" className={`w-20 h-20 flex items-center justify-center rounded-lg text-5xl ${mission.badge_color}`}>
-              {mission.badge_emoji}
-            </Badge>
-            <p className="font-semibold">{t('badgeId', mission)}</p>
-          </CardContent>
-        </Card>
+        {isPerfectScore && (
+            <Card className="shadow-lg">
+                <CardHeader>
+                    <CardTitle>{t('badgeUnlocked', pageText)}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center gap-2">
+                    <Badge variant="default" className={`w-20 h-20 flex items-center justify-center rounded-lg text-5xl ${mission.badge_color}`}>
+                    {mission.badge_emoji}
+                    </Badge>
+                    <p className="font-semibold">{t('badgeId', mission)}</p>
+                </CardContent>
+            </Card>
+        )}
       </div>
 
       <Card className="bg-accent/10 border-accent/20">
