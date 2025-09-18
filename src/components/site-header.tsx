@@ -194,7 +194,7 @@ export function SiteHeader() {
                 <>
                     <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                         <span className="text-right font-semibold">{t('qualification', headerText)}</span>
-                        <span>Placeholder Qualification</span>
+                        <span>B.Com</span>
                     </div>
                     <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                         <span className="text-right font-semibold">{t('subjectTaught', headerText)}</span>
@@ -202,7 +202,7 @@ export function SiteHeader() {
                     </div>
                     <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                         <span className="text-right font-semibold">{t('address', headerText)}</span>
-                        <span>Placeholder Address</span>
+                        <span>Hyderabad</span>
                     </div>
                 </>
             ) : (
@@ -234,3 +234,5 @@ export function SiteHeader() {
     </>
   );
 }
+
+    

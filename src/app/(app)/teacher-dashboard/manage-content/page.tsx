@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { missions as initialMissions, subjects } from "@/lib/data";
+import { missions as initialMissions, subjects, competitionQuestions as initialCompetitionQuestions } from "@/lib/data";
 import type { Mission, Question } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,6 +19,7 @@ export default function ManageContentPage() {
     const { t } = useLanguage();
     const { toast } = useToast();
     const [isMissionDialogOpen, setIsMissionDialogOpen] = useState(false);
+    const [isCompetitionDialogOpen, setIsCompetitionDialogOpen] = useState(false);
     
     // New Mission State
     const [newMission, setNewMission] = useState<Partial<Mission>>({
@@ -28,6 +29,14 @@ export default function ManageContentPage() {
     const [newQuestion, setNewQuestion] = useState<Partial<Question>>({
         options: [{id: 'a', text: ''}, {id: 'b', text: ''}, {id: 'c', text: ''}, {id: 'd', text: ''}],
         type: 'mcq'
+    });
+    
+    // New Competition Question State
+    const [newCompetitionQuestion, setNewCompetitionQuestion] = useState<Partial<Question>>({
+        subject: 'physics',
+        type: 'mcq',
+        difficulty: 'medium',
+        options: [{id: 'a', text: ''}, {id: 'b', text: ''}, {id: 'c', text: ''}, {id: 'd', text: ''}]
     });
 
     const handleSaveNewMission = () => {
@@ -62,7 +71,7 @@ export default function ManageContentPage() {
         });
     };
     
-    const handleAddQuestion = () => {
+    const handleAddQuestionToMission = () => {
         if (!newQuestion.text || !newQuestion.correctAnswer || newQuestion.options?.some(opt => !opt.text)) {
              toast({
                 title: "Incomplete Question",
@@ -80,6 +89,35 @@ export default function ManageContentPage() {
         setNewQuestion({
             options: [{id: 'a', text: ''}, {id: 'b', text: ''}, {id: 'c', text: ''}, {id: 'd', text: ''}],
             type: 'mcq'
+        });
+    };
+    
+    const handleSaveNewCompetitionQuestion = () => {
+        if (!newCompetitionQuestion.text || !newCompetitionQuestion.subject || !newCompetitionQuestion.correctAnswer || newCompetitionQuestion.options?.some(opt => !opt.text)) {
+             toast({
+                title: "Incomplete Question",
+                description: "Please fill in all fields for the competition question.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const storedCompQuestionsStr = localStorage.getItem('competitionQuestions');
+        const storedCompQuestions = storedCompQuestionsStr ? JSON.parse(storedCompQuestionsStr) : initialCompetitionQuestions;
+
+        const questionToSave: Question = {
+            id: `custom-${Date.now()}`,
+            ...newCompetitionQuestion
+        } as Question;
+
+        const updatedCompQuestions = [...storedCompQuestions, questionToSave];
+        localStorage.setItem('competitionQuestions', JSON.stringify(updatedCompQuestions));
+
+        setIsCompetitionDialogOpen(false);
+        setNewCompetitionQuestion({ subject: 'physics', type: 'mcq', difficulty: 'medium', options: [{id: 'a', text: ''}, {id: 'b', text: ''}, {id: 'c', text: ''}, {id: 'd', text: ''}]}); // Reset form
+        toast({
+            title: "Success",
+            description: "New competition question has been saved locally.",
         });
     };
 
@@ -102,6 +140,7 @@ export default function ManageContentPage() {
         option: { en: "Option", hi: "विकल्प", te: "ఎంపిక" },
         correctAnswer: { en: "Correct Answer", hi: "सही उत्तर", te: "సరైన సమాధానం" },
         saveMission: { en: "Save Mission", hi: "मिशन सहेजें", te: "మిషన్‌ను సేవ్ చేయండి" },
+        saveQuestion: { en: "Save Question", hi: "प्रश्न सहेजें", te: "ప్రశ్నను సేవ్ చేయండి" },
         cancel: { en: "Cancel", hi: "रद्द करें", te: "రద్దు చేయండి" },
     };
 
@@ -130,13 +169,14 @@ export default function ManageContentPage() {
                         <CardDescription>{t('manageCompetitionsDesc', pageText)}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Button className="w-full" disabled>
+                        <Button onClick={() => setIsCompetitionDialogOpen(true)} className="w-full">
                              <PlusCircle className="mr-2 h-4 w-4" /> {t('addCompetitionQuestion', pageText)}
                         </Button>
                     </CardContent>
                 </Card>
             </div>
 
+            {/* Add Mission Dialog */}
             <Dialog open={isMissionDialogOpen} onOpenChange={setIsMissionDialogOpen}>
                 <DialogContent className="sm:max-w-[600px]">
                     <DialogHeader>
@@ -206,7 +246,7 @@ export default function ManageContentPage() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <Button variant="outline" onClick={handleAddQuestion}>{t('addQuestion', pageText)}</Button>
+                            <Button variant="outline" onClick={handleAddQuestionToMission}>{t('addQuestion', pageText)}</Button>
                         </div>
                     </div>
                     <DialogFooter>
@@ -215,6 +255,64 @@ export default function ManageContentPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+             {/* Add Competition Question Dialog */}
+            <Dialog open={isCompetitionDialogOpen} onOpenChange={setIsCompetitionDialogOpen}>
+                <DialogContent className="sm:max-w-[600px]">
+                    <DialogHeader>
+                        <DialogTitle>{t('addCompetitionQuestion', pageText)}</DialogTitle>
+                        <DialogDescription>Create a new question for the competition pool. It will be saved locally.</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label>{t('subject', pageText)}</Label>
+                             <Select value={newCompetitionQuestion.subject} onValueChange={(value) => setNewCompetitionQuestion({...newCompetitionQuestion, subject: value as Question['subject']})}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a subject" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {subjects.filter(s => s.id !== 'english' && s.id !== 'gk').map(s => <SelectItem key={s.id} value={s.id}>{t('title', s)}</SelectItem>)}
+                                    <SelectItem value="mega">Mega STEM</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label>{t('questionText', pageText)}</Label>
+                            <Textarea value={newCompetitionQuestion.text || ''} onChange={e => setNewCompetitionQuestion({...newCompetitionQuestion, text: e.target.value})} />
+                        </div>
+                        {newCompetitionQuestion.options?.map((option, index) => (
+                            <div key={index} className="space-y-2">
+                                <Label>{t('option', pageText)} {option.id.toUpperCase()}</Label>
+                                <Input value={option.text || ''} onChange={e => {
+                                    const updatedOptions = [...(newCompetitionQuestion.options || [])];
+                                    updatedOptions[index].text = e.target.value;
+                                    setNewCompetitionQuestion({...newCompetitionQuestion, options: updatedOptions});
+                                }}/>
+                            </div>
+                        ))}
+                         <div className="space-y-2">
+                            <Label>{t('correctAnswer', pageText)}</Label>
+                            <Select value={newCompetitionQuestion.correctAnswer} onValueChange={value => setNewCompetitionQuestion({...newCompetitionQuestion, correctAnswer: value})}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select correct option" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="a">Option A</SelectItem>
+                                    <SelectItem value="b">Option B</SelectItem>
+                                    <SelectItem value="c">Option C</SelectItem>
+                                    <SelectItem value="d">Option D</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setIsCompetitionDialogOpen(false)}>{t('cancel', pageText)}</Button>
+                        <Button onClick={handleSaveNewCompetitionQuestion}>{t('saveQuestion', pageText)}</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
+
+    
